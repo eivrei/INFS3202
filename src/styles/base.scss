@@ -1,0 +1,19 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  padding-bottom: 3em;
+}
+
+.card {
+  margin: 1em;
+}
+
+.no-link:hover {
+  text-decoration: none !important;
+  color: #007bff;
+}

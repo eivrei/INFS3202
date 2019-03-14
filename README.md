@@ -1,4 +1,4 @@
-#INFS3202 - Event manager
+##INFS3202 - Event manager
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
