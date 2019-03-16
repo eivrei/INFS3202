@@ -4,8 +4,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import './styles/base.scss';
 import Landingpage from './components/Landingpage';
 import Layout from './components/Layout';
-import LoginContainer from './containers/LoginContainer';
-import RegisterContainer from './containers/RegisterContainer';
+import SignInContainer from './containers/SignInContainer';
+import SignUpContainer from './containers/SignUpContainer';
 import NoMatch from './components/NoMatch';
 
 const App = () => (
@@ -15,8 +15,8 @@ const App = () => (
       <Layout>
         <Switch>
           <Route path="/" exact component={Landingpage} />
-          <Route path="/login" exact component={LoginContainer} />
-          <Route path="/register" exact component={RegisterContainer} />
+          <Route path="/sign-in" exact component={SignInContainer} />
+          <Route path="/sign-up" exact component={SignUpContainer} />
           <Route component={NoMatch} />
         </Switch>
       </Layout>

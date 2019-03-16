@@ -49,8 +49,8 @@ const Navbar = ({ location }) => (
           </NavLink>
         </Button>
 
-        <Button color="primary" disabled={location.pathname === '/login'}>
-          <NavLink to="/login" activeClassName="navbar__active">
+        <Button color="primary" disabled={location.pathname === '/sign-in'}>
+          <NavLink to="/sign-in" activeClassName="navbar__active">
             <AccountCircleIcon className="button-icon" />
             <Hidden smDown>Login</Hidden>
           </NavLink>
