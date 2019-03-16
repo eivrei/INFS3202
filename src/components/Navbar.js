@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import EventIcon from '@material-ui/icons/Event';
 import Hidden from '@material-ui/core/Hidden';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import SearchIcon from '@material-ui/icons/Search';
+import InputBase from '@material-ui/core/InputBase';
 
 const Navbar = ({ location }) => (
   <div className="navbar">
@@ -48,6 +50,13 @@ const Navbar = ({ location }) => (
             About
           </NavLink>
         </Button>
+
+        <div className="search">
+          <div className="icon">
+            <SearchIcon />
+          </div>
+          <InputBase placeholder="Search…" className="input" />
+        </div>
 
         <Button color="primary" disabled={location.pathname === '/sign-in'}>
           <NavLink to="/sign-in" activeClassName="navbar__active">
