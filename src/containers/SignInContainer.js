@@ -32,6 +32,7 @@ class LoginContainer extends React.Component {
   validateEmail = () => {
     const { email } = this.state;
     if (
+      email !== '' &&
       !/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
         email
       )
@@ -58,7 +59,7 @@ class LoginContainer extends React.Component {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <form className="form">
+          <form className="form" onSubmit={this.handleSubmit}>
             <FormInput
               id="email"
               name="email"
@@ -100,7 +101,6 @@ class LoginContainer extends React.Component {
               variant="contained"
               color="primary"
               className="submit-button"
-              onClick={this.handleSubmit}
             >
               Sign in
             </Button>

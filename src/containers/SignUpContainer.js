@@ -30,6 +30,12 @@ class SignUpContainer extends React.Component {
 
   validateField = field => {
     const { firstName, lastName, email, password, confirmedPassword } = this.state;
+
+    // eslint-disable-next-line react/destructuring-assignment
+    if (this.state[field] === '') {
+      return;
+    }
+
     switch (field) {
       case 'firstName':
         if (firstName.length < 2) {
@@ -97,7 +103,7 @@ class SignUpContainer extends React.Component {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          <form className="form">
+          <form className="form" onSubmit={this.handleSubmit}>
             <FormInput
               id="first-name"
               name="firstName"
@@ -163,13 +169,7 @@ class SignUpContainer extends React.Component {
                 By submitting, you agree to our Terms and Purchase Policy, and understand your
                 information will be used as described in our Privacy Policy.
               </Typography>
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-                onClick={this.handleSubmit}
-              >
+              <Button type="submit" fullWidth variant="contained" color="primary">
                 Sign up
               </Button>
             </div>
