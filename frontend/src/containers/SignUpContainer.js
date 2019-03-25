@@ -104,7 +104,7 @@ class SignUpContainer extends React.Component {
     const { email, password, firstName, lastName } = this.state;
     const { history, handleSignUp } = this.props;
     handleSignUp(email, password, firstName, lastName);
-    setTimeout(() => history.push('/'), 3000);
+    // setTimeout(() => history.push('/'), 3000);
   };
 
   render() {

@@ -24,35 +24,25 @@ const Navbar = ({ location, loggedIn, handleSignOut }) => (
           </NavLink>
         </Typography>
 
-        <Button disabled={location.pathname === '/music'}>
-          <NavLink to="/music" activeClassName="navbar__active">
-            Music
-          </NavLink>
-        </Button>
+        <NavLink to="/music" activeClassName="navbar__active">
+          <Button disabled={location.pathname === '/music'}>Music</Button>
+        </NavLink>
 
-        <Button disabled={location.pathname === '/sports'}>
-          <NavLink to="/sports" activeClassName="navbar__active">
-            Sports
-          </NavLink>
-        </Button>
+        <NavLink to="/sports" activeClassName="navbar__active">
+          <Button disabled={location.pathname === '/sports'}>Sports</Button>
+        </NavLink>
 
-        <Button disabled={location.pathname === '/festivals'}>
-          <NavLink to="/festivals" activeClassName="navbar__active">
-            Festivals
-          </NavLink>
-        </Button>
+        <NavLink to="/festivals" activeClassName="navbar__active">
+          <Button disabled={location.pathname === '/festivals'}>Festivals</Button>
+        </NavLink>
 
-        <Button disabled={location.pathname === '/theater&shows'}>
-          <NavLink to="/theater&shows" activeClassName="navbar__active">
-            Theater/Shows
-          </NavLink>
-        </Button>
+        <NavLink to="/theater&shows" activeClassName="navbar__active">
+          <Button disabled={location.pathname === '/theater&shows'}>Theater/Shows</Button>
+        </NavLink>
 
-        <Button disabled={location.pathname === '/about'}>
-          <NavLink to="/about" activeClassName="navbar__active">
-            About
-          </NavLink>
-        </Button>
+        <NavLink to="/about" activeClassName="navbar__active">
+          <Button disabled={location.pathname === '/about'}>About</Button>
+        </NavLink>
 
         <div className="search">
           <div className="icon">
@@ -62,19 +52,19 @@ const Navbar = ({ location, loggedIn, handleSignOut }) => (
         </div>
 
         {loggedIn ? (
-          <Button color="primary" disabled={location.pathname === '/sign-out'}>
-            <NavLink to="/" activeClassName="navbar__active" onClick={handleSignOut}>
+          <NavLink to="/" activeClassName="navbar__active" onClick={handleSignOut}>
+            <Button color="primary" disabled={location.pathname === '/sign-out'}>
               <AccountCircleIcon className="button-icon" />
               <Hidden smDown>Sign out</Hidden>
-            </NavLink>
-          </Button>
+            </Button>
+          </NavLink>
         ) : (
-          <Button color="primary" disabled={location.pathname === '/sign-in'}>
-            <NavLink to="/sign-in" activeClassName="navbar__active">
+          <NavLink to="/sign-in" activeClassName="navbar__active">
+            <Button color="primary" disabled={location.pathname === '/sign-in'}>
               <AccountCircleIcon className="button-icon" />
               <Hidden smDown>Sign in</Hidden>
-            </NavLink>
-          </Button>
+            </Button>
+          </NavLink>
         )}
       </Toolbar>
     </AppBar>

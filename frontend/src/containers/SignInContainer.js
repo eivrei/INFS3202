@@ -51,7 +51,7 @@ class SignInContainer extends React.Component {
     const { history, handleSignIn } = this.props;
     try {
       handleSignIn(email, password);
-      setTimeout(() => history.push('/'), 3000);
+      // setTimeout(() => history.push('/'), 3000);
     } catch (err) {
       console.error(err);
     }
