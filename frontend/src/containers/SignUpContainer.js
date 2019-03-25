@@ -1,14 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import axios from 'axios';
+import { connect } from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import FormInput from '../components/FormInput';
-import { post } from '../utils/api';
+import { signUp } from '../actions/userActions';
 
 class SignUpContainer extends React.Component {
   state = {
@@ -27,7 +26,12 @@ class SignUpContainer extends React.Component {
   };
 
   handleInputChange = (field, value) => {
-    this.setError(field, false);
+    if (field === 'password' || field === 'confirmedPassword') {
+      this.setError('password', false);
+      this.setError('confirmedPassword', false);
+    } else {
+      this.setError(field, false);
+    }
     this.setState({ [field]: value });
   };
 
@@ -74,10 +78,15 @@ class SignUpContainer extends React.Component {
             'Password must contain at least: 8 characters, 1 number, 1 upper case letter, 1 lower case letter and 1 special character(?=.[!@#$%^&*.,;:]) '
           );
         }
+        if (confirmedPassword.trim() !== '' && password !== confirmedPassword) {
+          this.setError(field, 'Passwords does not match');
+          this.setError('confirmedPassword', 'Passwords does not match');
+        }
         break;
       case 'confirmedPassword': {
         if (password.trim() !== '' && password !== confirmedPassword) {
           this.setError(field, 'Passwords does not match');
+          this.setError('password', 'Passwords does not match');
         }
         break;
       }
@@ -93,25 +102,16 @@ class SignUpContainer extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     const { email, password, firstName, lastName } = this.state;
-    const { history } = this.props;
-    post('/users', {
-      email,
-      password,
-      firstName,
-      lastName
-    })
-      .then(res => {
-        if (res.status === 201) {
-          Cookies.set('token', res.data.token, { expires: 7 });
-          axios.defaults.headers.common.Authorization = `JWT ${res.data.token}`;
-          setTimeout(() => history.push('/'), 3000);
-        }
-      })
-      .catch(err => console.error(err));
+    const { history, handleSignUp } = this.props;
+    handleSignUp(email, password, firstName, lastName);
+    setTimeout(() => history.push('/'), 3000);
   };
 
   render() {
     const { firstName, lastName, email, password, confirmedPassword, errors } = this.state;
+
+    const isErrors = Object.values(errors).filter(error => error !== false).length !== 0;
+
     return (
       <div className="form">
         <Paper className="paper">
@@ -187,7 +187,13 @@ class SignUpContainer extends React.Component {
                 By submitting, you agree to our Terms and Purchase Policy, and understand your
                 information will be used as described in our Privacy Policy.
               </Typography>
-              <Button type="submit" fullWidth variant="contained" color="primary">
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                disabled={isErrors}
+              >
                 Sign up
               </Button>
             </div>
@@ -201,4 +207,12 @@ class SignUpContainer extends React.Component {
   }
 }
 
-export default SignUpContainer;
+export const mapDispatchToProps = dispatch => ({
+  handleSignUp: (email, password, firstName, lastName) =>
+    dispatch(signUp(email, password, firstName, lastName))
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(SignUpContainer);

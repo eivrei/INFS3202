@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import axios from 'axios';
+import { connect } from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -10,9 +9,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import FormInput from '../components/FormInput';
-import { login } from '../utils/api';
+import { signIn } from '../actions/userActions';
 
-class LoginContainer extends React.Component {
+class SignInContainer extends React.Component {
   state = {
     email: '',
     password: '',
@@ -49,20 +48,13 @@ class LoginContainer extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     const { email, password } = this.state;
-    const { history } = this.props;
-    login({
-      username: email,
-      password
-    })
-      .then(res => {
-        if (res.status === 200) {
-          Cookies.set('token', res.data.token, { expires: 7 });
-          axios.defaults.headers.common.Authorization = `JWT ${res.data.token}`;
-          setTimeout(() => history.push('/'), 3000);
-        }
-      })
-      // .then(history.push('/my-profile'))
-      .catch(err => console.error(err));
+    const { history, handleSignIn } = this.props;
+    try {
+      handleSignIn(email, password);
+      setTimeout(() => history.push('/'), 3000);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   render() {
@@ -134,4 +126,11 @@ class LoginContainer extends React.Component {
   }
 }
 
-export default LoginContainer;
+export const mapDispatchToProps = dispatch => ({
+  handleSignIn: (username, password) => dispatch(signIn(username, password))
+});
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(SignInContainer);

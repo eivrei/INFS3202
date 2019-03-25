@@ -1,5 +1,7 @@
 import React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import AppBar from '@material-ui/core/AppBar';
 import Button from '@material-ui/core/Button';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -9,8 +11,9 @@ import Hidden from '@material-ui/core/Hidden';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
+import { signOut } from '../actions/userActions';
 
-const Navbar = ({ location }) => (
+const Navbar = ({ location, loggedIn, handleSignOut }) => (
   <div className="navbar">
     <AppBar position="sticky" color="default" className="app-bar">
       <Toolbar>
@@ -58,15 +61,40 @@ const Navbar = ({ location }) => (
           <InputBase placeholder="Search…" className="input" />
         </div>
 
-        <Button color="primary" disabled={location.pathname === '/sign-in'}>
-          <NavLink to="/sign-in" activeClassName="navbar__active">
-            <AccountCircleIcon className="button-icon" />
-            <Hidden smDown>Login</Hidden>
-          </NavLink>
-        </Button>
+        {loggedIn ? (
+          <Button color="primary" disabled={location.pathname === '/sign-out'}>
+            <NavLink to="/" activeClassName="navbar__active" onClick={handleSignOut}>
+              <AccountCircleIcon className="button-icon" />
+              <Hidden smDown>Sign out</Hidden>
+            </NavLink>
+          </Button>
+        ) : (
+          <Button color="primary" disabled={location.pathname === '/sign-in'}>
+            <NavLink to="/sign-in" activeClassName="navbar__active">
+              <AccountCircleIcon className="button-icon" />
+              <Hidden smDown>Sign in</Hidden>
+            </NavLink>
+          </Button>
+        )}
       </Toolbar>
     </AppBar>
   </div>
 );
 
-export default withRouter(Navbar);
+Navbar.propTypes = {
+  loggedIn: PropTypes.bool.isRequired
+};
+
+export const mapStateToProps = state => ({
+  loggedIn: state.user.isLoggedIn
+});
+export const mapDispatchToProps = dispatch => ({
+  handleSignOut: () => dispatch(signOut())
+});
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Navbar)
+);
