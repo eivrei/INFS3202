@@ -1,10 +1,8 @@
-##INFS3202 - Event manager
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# INFS3202 - Event manager
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the directory 'frontend', you can run:
 
 ### `yarn start`
 
@@ -29,42 +27,32 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+# INFS3202 - Backend
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Start the server locally
+* `cd backend` # Navigate to the backend folder
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+* `python3 -m venv venv`
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+* `source venv/bin/activate`
 
-## Learn More
+* `echo "from .development import *" > infs3202/settings/local.py`
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+* `pip install -r requirements/dev.txt`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+* `docker-compose up` # Starts the postgres database
 
-### Code Splitting
+* `python manage.py runserver`
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
 
-### Analyzing the Bundle Size
+You will have to run `python manage.py migrate` if you have not migrated previously
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+One can also run the schell script
+`./start_server.sh`
+The first time running the shell script you will have to give it permissions.
+For Linux systems run
+`chmod +x start_server.sh`
 
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+Additionally, to create a superuser run
+`python manage.py createsuperuser`
