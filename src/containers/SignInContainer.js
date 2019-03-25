@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import axios from 'axios';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -8,6 +10,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import FormInput from '../components/FormInput';
+import { login } from '../utils/api';
 
 class LoginContainer extends React.Component {
   state = {
@@ -44,8 +47,22 @@ class LoginContainer extends React.Component {
   };
 
   handleSubmit = e => {
-    console.log('submit');
     e.preventDefault();
+    const { email, password } = this.state;
+    const { history } = this.props;
+    login({
+      username: email,
+      password
+    })
+      .then(res => {
+        if (res.status === 200) {
+          Cookies.set('token', res.data.token, { expires: 7 });
+          axios.defaults.headers.common.Authorization = `JWT ${res.data.token}`;
+          setTimeout(() => history.push('/'), 3000);
+        }
+      })
+      // .then(history.push('/my-profile'))
+      .catch(err => console.error(err));
   };
 
   render() {

@@ -1,11 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import axios from 'axios';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import FormInput from '../components/FormInput';
+import { post } from '../utils/api';
 
 class SignUpContainer extends React.Component {
   state = {
@@ -88,8 +91,23 @@ class SignUpContainer extends React.Component {
   };
 
   handleSubmit = e => {
-    console.log('submit');
     e.preventDefault();
+    const { email, password, firstName, lastName } = this.state;
+    const { history } = this.props;
+    post('/users', {
+      email,
+      password,
+      firstName,
+      lastName
+    })
+      .then(res => {
+        if (res.status === 201) {
+          Cookies.set('token', res.data.token, { expires: 7 });
+          axios.defaults.headers.common.Authorization = `JWT ${res.data.token}`;
+          setTimeout(() => history.push('/'), 3000);
+        }
+      })
+      .catch(err => console.error(err));
   };
 
   render() {
