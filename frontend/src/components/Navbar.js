@@ -11,9 +11,9 @@ import Hidden from '@material-ui/core/Hidden';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
-import { signOut } from '../actions/userActions';
+import { userActions } from '../actions/userActions';
 
-const Navbar = ({ location, loggedIn, handleSignOut }) => (
+const Navbar = ({ location, isLoggedIn, handleSignOut }) => (
   <div className="navbar">
     <AppBar position="sticky" color="default" className="app-bar">
       <Toolbar>
@@ -51,7 +51,7 @@ const Navbar = ({ location, loggedIn, handleSignOut }) => (
           <InputBase placeholder="Search…" className="input" />
         </div>
 
-        {loggedIn ? (
+        {isLoggedIn ? (
           <NavLink to="/" activeClassName="navbar__active" onClick={handleSignOut}>
             <Button color="primary" disabled={location.pathname === '/sign-out'}>
               <AccountCircleIcon className="button-icon" />
@@ -72,14 +72,14 @@ const Navbar = ({ location, loggedIn, handleSignOut }) => (
 );
 
 Navbar.propTypes = {
-  loggedIn: PropTypes.bool.isRequired
+  isLoggedIn: PropTypes.bool.isRequired
 };
 
 export const mapStateToProps = state => ({
-  loggedIn: state.user.isLoggedIn
+  isLoggedIn: state.authentication.isLoggedIn
 });
 export const mapDispatchToProps = dispatch => ({
-  handleSignOut: () => dispatch(signOut())
+  handleSignOut: () => dispatch(userActions.signOut())
 });
 
 export default withRouter(

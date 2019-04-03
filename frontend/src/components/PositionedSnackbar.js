@@ -98,7 +98,7 @@ PositionedSnackbar.propTypes = {
   horizontal: PropTypes.string,
   message: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
-  onClose: PropTypes.string.isRequired,
+  onClose: PropTypes.func.isRequired,
   variant: PropTypes.oneOf(['success', 'warning', 'error', 'info']).isRequired,
   autoHideDuration: PropTypes.number
 };
@@ -106,7 +106,7 @@ PositionedSnackbar.propTypes = {
 PositionedSnackbar.defaultProps = {
   vertical: 'top',
   horizontal: 'right',
-  autoHideDuration: 3000
+  autoHideDuration: 5000
 };
 
 export default withStyles(styles)(PositionedSnackbar);

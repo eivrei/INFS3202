@@ -1,22 +1,36 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { Router, Route, Switch } from 'react-router-dom';
+import { connect } from 'react-redux';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import './styles/base.scss';
+import { history } from './utils/history';
 import Landingpage from './components/Landingpage';
 import Layout from './components/Layout';
 import SignInContainer from './containers/SignInContainer';
 import SignUpContainer from './containers/SignUpContainer';
 import NoMatch from './components/NoMatch';
+import PrivateRoute from './containers/PrivateRoute';
+import Profile from './components/Profile';
+import PositionedSnackbar from './components/PositionedSnackbar';
+import { alertActions } from './actions/alertActions';
 
-const App = () => (
+const App = ({ alert, clearAlert }) => (
   <React.Fragment>
     <CssBaseline />
-    <Router>
+    <Router history={history}>
       <Layout>
+        <PositionedSnackbar
+          open={alert.open}
+          variant={alert.type}
+          message={alert.message}
+          onClose={clearAlert}
+        />
         <Switch>
           <Route path="/" exact component={Landingpage} />
-          <Route path="/sign-in" exact component={SignInContainer} />
-          <Route path="/sign-up" exact component={SignUpContainer} />
+          <Route path="/sign-in" component={SignInContainer} />
+          <Route path="/sign-up" component={SignUpContainer} />
+          <PrivateRoute exact path="/my-profile" component={Profile} />
           <Route component={NoMatch} />
         </Switch>
       </Layout>
@@ -24,4 +38,24 @@ const App = () => (
   </React.Fragment>
 );
 
-export default App;
+App.propTypes = {
+  alert: PropTypes.shape({
+    open: PropTypes.bool,
+    type: PropTypes.string,
+    message: PropTypes.string
+  }).isRequired,
+  clearAlert: PropTypes.func.isRequired
+};
+
+const mapStateToProps = state => ({
+  alert: state.alert
+});
+
+const mapDispatchToProps = dispatch => ({
+  clearAlert: () => dispatch(alertActions.clear())
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);

@@ -12,15 +12,15 @@ const apiInstance = axios.create({
 });
 
 export function get(url) {
-  return apiInstance.get(`${url}/`).then(res => res);
+  return apiInstance.get(`${url}/`);
 }
 
 export function put(url, body) {
-  return apiInstance.put(`${url}/`, body).then(res => res);
+  return apiInstance.put(`${url}/`, body);
 }
 
 export function post(url, body) {
-  return apiInstance.post(`${url}/`, body).then(res => res);
+  return apiInstance.post(`${url}/`, body);
 }
 
 export function login(body) {
@@ -28,5 +28,5 @@ export function login(body) {
 }
 
 export function verifyToken(body) {
-  return authInstance.post('authorization/token-auth/verify/', body).then(res => res);
+  return authInstance.post('authorization/token-auth/verify/', body);
 }

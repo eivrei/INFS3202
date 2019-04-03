@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
@@ -7,7 +8,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import FormInput from '../components/FormInput';
-import { signUp } from '../actions/userActions';
+import { userActions } from '../actions/userActions';
 
 class SignUpContainer extends React.Component {
   state = {
@@ -24,6 +25,14 @@ class SignUpContainer extends React.Component {
       confirmedPassword: false
     }
   };
+
+  componentDidMount() {
+    const { isLoggedIn, history } = this.props;
+
+    if (isLoggedIn) {
+      history.push('/my-profile');
+    }
+  }
 
   handleInputChange = (field, value) => {
     if (field === 'password' || field === 'confirmedPassword') {
@@ -99,12 +108,16 @@ class SignUpContainer extends React.Component {
     this.setState(prevState => ({ errors: { ...prevState.errors, [field]: errorText } }));
   };
 
+  clearPassword = () => {
+    this.setState({ password: '', confirmedPassword: '' });
+  };
+
   handleSubmit = e => {
     e.preventDefault();
     const { email, password, firstName, lastName } = this.state;
-    const { history, handleSignUp } = this.props;
+    const { handleSignUp } = this.props;
     handleSignUp(email, password, firstName, lastName);
-    // setTimeout(() => history.push('/'), 3000);
+    this.clearPassword();
   };
 
   render() {
@@ -207,12 +220,21 @@ class SignUpContainer extends React.Component {
   }
 }
 
-export const mapDispatchToProps = dispatch => ({
+SignUpContainer.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+  handleSignUp: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = dispatch => ({
   handleSignUp: (email, password, firstName, lastName) =>
-    dispatch(signUp(email, password, firstName, lastName))
+    dispatch(userActions.signUp(email, password, firstName, lastName))
+});
+
+const mapStateToProps = state => ({
+  isLoggedIn: state.authentication.isLoggedIn
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(SignUpContainer);

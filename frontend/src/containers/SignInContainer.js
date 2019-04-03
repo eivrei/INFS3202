@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
@@ -9,7 +10,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import FormInput from '../components/FormInput';
-import { signIn } from '../actions/userActions';
+import { userActions } from '../actions/userActions';
 
 class SignInContainer extends React.Component {
   state = {
@@ -20,6 +21,14 @@ class SignInContainer extends React.Component {
       email: false
     }
   };
+
+  componentDidMount() {
+    const { isLoggedIn, history } = this.props;
+
+    if (isLoggedIn) {
+      history.push('/my-profile');
+    }
+  }
 
   handleInputChange = (field, value) => {
     this.setState({ [field]: value, errors: { email: false } });
@@ -47,11 +56,10 @@ class SignInContainer extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const { email, password } = this.state;
-    const { history, handleSignIn } = this.props;
+    const { email, password, remember } = this.state;
+    const { handleSignIn } = this.props;
     try {
-      handleSignIn(email, password);
-      // setTimeout(() => history.push('/'), 3000);
+      handleSignIn(email, password, remember);
     } catch (err) {
       console.error(err);
     }
@@ -126,11 +134,21 @@ class SignInContainer extends React.Component {
   }
 }
 
-export const mapDispatchToProps = dispatch => ({
-  handleSignIn: (username, password) => dispatch(signIn(username, password))
+SignInContainer.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+  handleSignIn: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = dispatch => ({
+  handleSignIn: (username, password, remember) =>
+    dispatch(userActions.signIn(username, password, remember))
+});
+
+const mapStateToProps = state => ({
+  isLoggedIn: state.authentication.isLoggedIn
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(SignInContainer);
