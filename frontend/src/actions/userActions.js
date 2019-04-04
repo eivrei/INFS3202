@@ -1,6 +1,6 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { login, post, verifyToken } from '../utils/api';
+import { login, post, verifyToken, get } from '../utils/api';
 import { history } from '../utils/history';
 import { alertActions } from './alertActions';
 
@@ -40,7 +40,7 @@ const signIn = (username, password, remember) => {
     })
       .then(res => {
         if (res.status === 200) {
-          Cookies.set('token', res.data.token, { expires: remember ? 7 : 0 });
+          Cookies.set('token', res.data.token, remember ? { expires: 7 } : {});
           axios.defaults.headers.common.Authorization = `JWT ${res.data.token}`;
           dispatch(success(res.data.token, remember));
           dispatch(alertActions.success('Successfully signed in'));
@@ -92,6 +92,9 @@ const deleteAllUserInfo = dispatch => {
 };
 
 const signOut = () => dispatch => {
+  const getUsers = async () => {
+    await get('/users/current').then(res => console.log(res));
+  };
   deleteAllUserInfo(dispatch);
   dispatch(alertActions.success('Successfully signed out'));
 };
