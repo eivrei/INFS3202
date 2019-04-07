@@ -10,7 +10,7 @@ import '../styles/landingpage.scss';
 
 const Landingpage = () => (
   <div>
-    <Typography component="h2" variant="h2" gutterBottom>
+    <Typography variant="h2" gutterBottom>
       Upcoming events
     </Typography>
     <Grid container justify="space-between">

@@ -31,7 +31,10 @@ class SignInContainer extends React.Component {
   }
 
   handleInputChange = (field, value) => {
-    this.setState({ [field]: value, errors: { email: false } });
+    this.setState({ [field]: value });
+    if (field === 'email') {
+      this.setState({ errors: false });
+    }
   };
 
   handleRememberChange = () => {
@@ -67,6 +70,9 @@ class SignInContainer extends React.Component {
 
   render() {
     const { email, password, remember, errors } = this.state;
+    const { isLoggingIn } = this.props;
+    const isErrors = Object.values(errors).filter(error => error !== false).length !== 0;
+
     return (
       <div className="form">
         <Paper className="paper">
@@ -118,6 +124,7 @@ class SignInContainer extends React.Component {
               variant="contained"
               color="primary"
               className="submit-button"
+              disabled={isErrors || isLoggingIn}
             >
               Sign in
             </Button>
@@ -136,6 +143,7 @@ class SignInContainer extends React.Component {
 
 SignInContainer.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
+  isLoggingIn: PropTypes.bool.isRequired,
   handleSignIn: PropTypes.func.isRequired
 };
 
@@ -145,7 +153,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-  isLoggedIn: state.authentication.isLoggedIn
+  isLoggedIn: state.authentication.isLoggedIn,
+  isLoggingIn: state.authentication.isLoggingIn
 });
 
 export default connect(

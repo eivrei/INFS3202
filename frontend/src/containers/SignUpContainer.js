@@ -122,6 +122,7 @@ class SignUpContainer extends React.Component {
 
   render() {
     const { firstName, lastName, email, password, confirmedPassword, errors } = this.state;
+    const { isRegistering } = this.props;
 
     const isErrors = Object.values(errors).filter(error => error !== false).length !== 0;
 
@@ -205,7 +206,7 @@ class SignUpContainer extends React.Component {
                 fullWidth
                 variant="contained"
                 color="primary"
-                disabled={isErrors}
+                disabled={isErrors || isRegistering}
               >
                 Sign up
               </Button>
@@ -222,6 +223,7 @@ class SignUpContainer extends React.Component {
 
 SignUpContainer.propTypes = {
   isLoggedIn: PropTypes.bool.isRequired,
+  isRegistering: PropTypes.bool.isRequired,
   handleSignUp: PropTypes.func.isRequired
 };
 
@@ -231,7 +233,8 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = state => ({
-  isLoggedIn: state.authentication.isLoggedIn
+  isLoggedIn: state.authentication.isLoggedIn,
+  isRegistering: state.register.isRegistering
 });
 
 export default connect(

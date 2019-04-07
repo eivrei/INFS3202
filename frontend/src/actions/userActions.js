@@ -1,6 +1,5 @@
-import axios from 'axios';
 import Cookies from 'js-cookie';
-import { login, post, verifyToken, get } from '../utils/api';
+import { apiInstance, login, get, post, verifyToken } from '../utils/api';
 import { history } from '../utils/history';
 import { alertActions } from './alertActions';
 
@@ -17,7 +16,11 @@ export const userActionTypes = {
 
   VERIFY_USER_REQUEST: 'VERIFY_USER_REQUEST',
   VERIFY_USER_SUCCESS: 'VERIFY_USER_SUCCESS',
-  VERIFY_USER_FAILURE: 'VERIFY_USER_FAILURE'
+  VERIFY_USER_FAILURE: 'VERIFY_USER_FAILURE',
+
+  FETCH_POFILE_REQUEST: 'FETCH_PROFILE_REQUEST',
+  FETCH_POFILE_SUCCESS: 'FETCH_PROFILE_SUCCESS',
+  FETCH_POFILE_FAILURE: 'FETCH_PROFILE_FAILURE'
 };
 
 const signIn = (username, password, remember) => {
@@ -41,15 +44,18 @@ const signIn = (username, password, remember) => {
       .then(res => {
         if (res.status === 200) {
           Cookies.set('token', res.data.token, remember ? { expires: 7 } : {});
-          axios.defaults.headers.common.Authorization = `JWT ${res.data.token}`;
+          apiInstance.defaults.headers.common.Authorization = `JWT ${res.data.token}`;
+          console.log(apiInstance.defaults.headers.common.Authorization);
           dispatch(success(res.data.token, remember));
           dispatch(alertActions.success('Successfully signed in'));
-          history.push('/');
+          history.push('/my-profile');
         }
       })
       .catch(({ response }) => {
         dispatch(failure(response.data));
-        dispatch(alertActions.error(response.data[0]));
+        Object.values(response.data).map(errors =>
+          errors.map(e => dispatch(alertActions.error(e)))
+        );
       });
   };
 };
@@ -78,23 +84,22 @@ const signUp = (email, password, firstName, lastName) => {
       })
       .catch(({ response }) => {
         dispatch(failure(response.data));
-        dispatch(alertActions.error(response.data[0]));
+        Object.values(response.data).map(errors =>
+          errors.map(e => dispatch(alertActions.error(e)))
+        );
       });
   };
 };
 
 const deleteAllUserInfo = dispatch => {
   Cookies.remove('token');
-  axios.defaults.headers.common.Authorization = null;
+  apiInstance.defaults.headers.common.Authorization = null;
   dispatch({
     type: userActionTypes.SIGN_OUT
   });
 };
 
 const signOut = () => dispatch => {
-  const getUsers = async () => {
-    await get('/users/current').then(res => console.log(res));
-  };
   deleteAllUserInfo(dispatch);
   dispatch(alertActions.success('Successfully signed out'));
 };
@@ -120,7 +125,7 @@ const verifyUser = () => {
       dispatch(request(token));
       const res = await verifyToken({ token });
       if (res.status === 200) {
-        axios.defaults.headers.common.Authorization = `JWT ${res.data.token}`;
+        apiInstance.defaults.headers.common.Authorization = `JWT ${res.data.token}`;
         dispatch(success(res.data.token));
       } else {
         signOutWithoutAlert();
@@ -138,11 +143,41 @@ const verifyUser = () => {
   };
 };
 
+const fetchProfile = () => {
+  function request() {
+    return { type: userActionTypes.FETCH_POFILE_REQUEST };
+  }
+  function success(user) {
+    return { type: userActionTypes.FETCH_POFILE_SUCCESS, user };
+  }
+  function failure(error) {
+    return { type: userActionTypes.FETCH_POFILE_FAILURE, error };
+  }
+
+  return async dispatch => {
+    dispatch(request());
+
+    await get('/users/current')
+      .then(res => {
+        if (res.status === 200) {
+          dispatch(success(res.data));
+        }
+      })
+      .catch(({ response }) => {
+        dispatch(failure(response.data));
+        Object.values(response.data).map(errors =>
+          errors.map(e => dispatch(alertActions.error(e)))
+        );
+      });
+  };
+};
+
 // All possible user actions
 export const userActions = {
   signIn,
   signUp,
   signOut,
   signOutWithoutAlert,
-  verifyUser
+  verifyUser,
+  fetchProfile
 };
