@@ -1,11 +1,14 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import FormInput from '../components/FormInput';
+import { userActions } from '../actions/userActions';
 
 class SignUpContainer extends React.Component {
   state = {
@@ -23,8 +26,21 @@ class SignUpContainer extends React.Component {
     }
   };
 
+  componentDidMount() {
+    const { isLoggedIn, history } = this.props;
+
+    if (isLoggedIn) {
+      history.push('/my-profile');
+    }
+  }
+
   handleInputChange = (field, value) => {
-    this.setError(field, false);
+    if (field === 'password' || field === 'confirmedPassword') {
+      this.setError('password', false);
+      this.setError('confirmedPassword', false);
+    } else {
+      this.setError(field, false);
+    }
     this.setState({ [field]: value });
   };
 
@@ -71,10 +87,15 @@ class SignUpContainer extends React.Component {
             'Password must contain at least: 8 characters, 1 number, 1 upper case letter, 1 lower case letter and 1 special character(?=.[!@#$%^&*.,;:]) '
           );
         }
+        if (confirmedPassword.trim() !== '' && password !== confirmedPassword) {
+          this.setError(field, 'Passwords does not match');
+          this.setError('confirmedPassword', 'Passwords does not match');
+        }
         break;
       case 'confirmedPassword': {
         if (password.trim() !== '' && password !== confirmedPassword) {
           this.setError(field, 'Passwords does not match');
+          this.setError('password', 'Passwords does not match');
         }
         break;
       }
@@ -87,13 +108,24 @@ class SignUpContainer extends React.Component {
     this.setState(prevState => ({ errors: { ...prevState.errors, [field]: errorText } }));
   };
 
+  clearPassword = () => {
+    this.setState({ password: '', confirmedPassword: '' });
+  };
+
   handleSubmit = e => {
-    console.log('submit');
     e.preventDefault();
+    const { email, password, firstName, lastName } = this.state;
+    const { handleSignUp } = this.props;
+    handleSignUp(email, password, firstName, lastName);
+    this.clearPassword();
   };
 
   render() {
     const { firstName, lastName, email, password, confirmedPassword, errors } = this.state;
+    const { isRegistering } = this.props;
+
+    const isErrors = Object.values(errors).filter(error => error !== false).length !== 0;
+
     return (
       <div className="form">
         <Paper className="paper">
@@ -169,7 +201,13 @@ class SignUpContainer extends React.Component {
                 By submitting, you agree to our Terms and Purchase Policy, and understand your
                 information will be used as described in our Privacy Policy.
               </Typography>
-              <Button type="submit" fullWidth variant="contained" color="primary">
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                disabled={isErrors || isRegistering}
+              >
                 Sign up
               </Button>
             </div>
@@ -183,4 +221,23 @@ class SignUpContainer extends React.Component {
   }
 }
 
-export default SignUpContainer;
+SignUpContainer.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+  isRegistering: PropTypes.bool.isRequired,
+  handleSignUp: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = dispatch => ({
+  handleSignUp: (email, password, firstName, lastName) =>
+    dispatch(userActions.signUp(email, password, firstName, lastName))
+});
+
+const mapStateToProps = state => ({
+  isLoggedIn: state.authentication.isLoggedIn,
+  isRegistering: state.register.isRegistering
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignUpContainer);

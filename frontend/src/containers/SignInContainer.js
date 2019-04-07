@@ -1,5 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -8,8 +10,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import FormInput from '../components/FormInput';
+import { userActions } from '../actions/userActions';
 
-class LoginContainer extends React.Component {
+class SignInContainer extends React.Component {
   state = {
     email: '',
     password: '',
@@ -19,8 +22,19 @@ class LoginContainer extends React.Component {
     }
   };
 
+  componentDidMount() {
+    const { isLoggedIn, history } = this.props;
+
+    if (isLoggedIn) {
+      history.push('/my-profile');
+    }
+  }
+
   handleInputChange = (field, value) => {
-    this.setState({ [field]: value, errors: { email: false } });
+    this.setState({ [field]: value });
+    if (field === 'email') {
+      this.setState({ errors: false });
+    }
   };
 
   handleRememberChange = () => {
@@ -44,12 +58,21 @@ class LoginContainer extends React.Component {
   };
 
   handleSubmit = e => {
-    console.log('submit');
     e.preventDefault();
+    const { email, password, remember } = this.state;
+    const { handleSignIn } = this.props;
+    try {
+      handleSignIn(email, password, remember);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   render() {
     const { email, password, remember, errors } = this.state;
+    const { isLoggingIn } = this.props;
+    const isErrors = Object.values(errors).filter(error => error !== false).length !== 0;
+
     return (
       <div className="form">
         <Paper className="paper">
@@ -101,6 +124,7 @@ class LoginContainer extends React.Component {
               variant="contained"
               color="primary"
               className="submit-button"
+              disabled={isErrors || isLoggingIn}
             >
               Sign in
             </Button>
@@ -117,4 +141,23 @@ class LoginContainer extends React.Component {
   }
 }
 
-export default LoginContainer;
+SignInContainer.propTypes = {
+  isLoggedIn: PropTypes.bool.isRequired,
+  isLoggingIn: PropTypes.bool.isRequired,
+  handleSignIn: PropTypes.func.isRequired
+};
+
+const mapDispatchToProps = dispatch => ({
+  handleSignIn: (username, password, remember) =>
+    dispatch(userActions.signIn(username, password, remember))
+});
+
+const mapStateToProps = state => ({
+  isLoggedIn: state.authentication.isLoggedIn,
+  isLoggingIn: state.authentication.isLoggingIn
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SignInContainer);
