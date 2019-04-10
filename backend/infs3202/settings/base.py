@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': 'infs3202',
         'USER': 'infs3202',
         'PASSWORD': '',
-        'HOST': ''
+        'HOST': 'localhost'
     }
 }
 

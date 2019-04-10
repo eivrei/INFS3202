@@ -28,31 +28,22 @@ Your app is ready to be deployed!
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 
-# INFS3202 - Backend
+# INFS3202 Backend
 
 ## Start the server locally
-* `cd backend` # Navigate to the backend folder
-
-* `python3 -m venv venv`
+* `python3 -m venv venv` # Create environment
 
 * `source venv/bin/activate`
 
-* `echo "from .development import *" > infs3202/settings/local.py`
+* `pip3 install -r requirements.txt` # Install all required modules
 
-* `pip install -r requirements/dev.txt`
+* `docker-compose up` # Starts the postgres database in a docker container
 
-* `docker-compose up` # Starts the postgres database
+* `python manage.py migrate` # You will have to run this if you haven't migrated previously
 
 * `python manage.py runserver`
 
-
-You will have to run `python manage.py migrate` if you have not migrated previously
-
-One can also run the schell script
-`./start_server.sh`
-The first time running the shell script you will have to give it permissions.
-For Linux systems run
-`chmod +x start_server.sh`
-
 Additionally, to create a superuser run
 `python manage.py createsuperuser`
+
+You can also use your own local PostgreSQL database instead of the dockerized version, but then you'll have to create the database 'infs3202' with the role 'infs3202'.
