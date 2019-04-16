@@ -35,7 +35,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 * `source venv/bin/activate`
 
-* `pip3 install -r requirements.txt` # Install all required modules
+* `pip install -r requirements.txt` # Install all required modules
 
 * `docker-compose up` # Starts the postgres database in a docker container
 

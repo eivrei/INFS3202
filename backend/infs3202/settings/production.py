@@ -2,4 +2,6 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['151.101.1.195', '151.101.65.195', 'thebigevent.xyz', 'www.thebigevent.xyz']
+SECRET_KEY = ''  # Add secret key here
+
+ALLOWED_HOSTS = ['localhost', '13.58.204.87', 'api.thebigevent.xyz']
