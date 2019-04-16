@@ -12,7 +12,7 @@ jobs:
     docker:
       - image: circleci/node:11.14
 
-    working_directory: ~/infs3202
+    working_directory: ~/infs3202/frontend
 
     steps:
       - checkout
