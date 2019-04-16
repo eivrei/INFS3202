@@ -12,7 +12,7 @@ jobs:
     docker:
       - image: circleci/node:11.14
 
-    working_directory: ~/infs3202/frontend
+    working_directory: ~/infs3202
 
     steps:
       - checkout
@@ -24,11 +24,13 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: cd frontend && yarn install
+      - run:
+        name: 'Install dependencies'
+        command: cd frontend && yarn install
 
       - save_cache:
           paths:
-            - node_modules
+            - frontend/node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
 
       - run:
@@ -37,4 +39,4 @@ jobs:
 
       - run:
           name: 'Deploy to Firebase'
-          command: cd frontend && './node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN'
+          command: './node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN'
