@@ -10,7 +10,7 @@ jobs:
         - ci-cd
 
     docker:
-      - image: circleci/node:7.10
+      - image: circleci/node:11.14
 
     working_directory: ~/infs3202
 
