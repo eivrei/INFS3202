@@ -25,8 +25,8 @@ jobs:
             - v1-dependencies-
 
       - run:
-        name: 'Install dependencies'
-        command: cd frontend && yarn install
+          name: 'Install dependencies'
+          command: cd frontend && yarn install
 
       - save_cache:
           paths:
