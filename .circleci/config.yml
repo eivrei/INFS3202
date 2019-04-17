@@ -29,7 +29,6 @@ jobs:
             cd frontend
             yarn install
             yarn add firebase-tools
-            yarn run firebase --version
 
       - save_cache:
           paths:
@@ -44,4 +43,4 @@ jobs:
           name: 'Deploy to Firebase'
           command: |
             cd frontend
-            './node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN'
+            './frontend/node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN'
