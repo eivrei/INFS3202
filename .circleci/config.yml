@@ -25,7 +25,7 @@ jobs:
 
       - run:
           name: 'Install dependencies'
-          command:
+          command: |
             cd frontend && yarn install
             yarn add firebase-tools
             yarn run firebase --version
