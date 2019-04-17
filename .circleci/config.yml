@@ -104,7 +104,6 @@ workflows:
               only:
                 - master
                 - dev
-                - ci-cd
 
       - build:
           requires:
@@ -117,7 +116,6 @@ workflows:
             branches:
               only:
                 - dev
-                - ci-cd
 
       - deploy_production:
           requires:
