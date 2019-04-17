@@ -1,0 +1,95 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  setup:
+    docker:
+      - image: circleci/node:$NODE_VERSION
+
+    working_directory: ~/infs3202
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - dependencies-{{ checksum "./frontend/package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - dependencies-
+
+      - run:
+          name: 'Install dependencies'
+          command: cd frontend && yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-{{ checksum "./frontend/package.json" }}
+
+      - persist_to_workspace:
+          root: frontend
+          paths:
+            - node_modules
+
+  build:
+    docker:
+      - image: circleci/node:$NODE_VERSION
+
+    working_directory: ~/infs3202
+
+    steps:
+      - checkout
+      - attach_workspace:
+          at: frontend
+
+      - run:
+          name: 'Build project'
+          command: cd frontend && REACT_APP_API_URL=$API_URL yarn build
+
+      - store_artifacts:
+          path: frontend/build
+      - persist_to_workspace:
+          root: frontend
+          paths:
+            - node_modules
+            - build
+            - .firebaserc
+            - firebase.json
+
+  deploy_prod:
+    docker:
+      - image: circleci/node:$NODE_VERSION
+
+    working_directory: ~/infs3202
+
+    steps:
+      - attach_workspace:
+          at: frontend
+
+      - run:
+          name: Add firebase tools
+          command: cd frontend && yarn add firebase-tools -D
+
+      - run:
+          name: 'Deploy to Firebase'
+          command: cd frontend && yarn run firebase deploy --token=$FIREBASE_TOKEN
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - setup:
+          filters:
+            branches:
+              only:
+                - master
+
+      - build:
+          requires:
+            - setup
+
+      - deploy_prod:
+          requires:
+            - build
