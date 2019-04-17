@@ -51,7 +51,7 @@ jobs:
           command: cd frontend && API_URL=$API_URL && yarn build
 
       - store_artifacts:
-          path: /build
+          path: frontend/build
       - persist_to_workspace:
           root: frontend
           paths:
@@ -68,7 +68,7 @@ jobs:
 
     steps:
       - attach_workspace:
-          at: ~/infs3202
+          at: frontend
 
       - run:
           name: Add firebase tools
@@ -77,7 +77,7 @@ jobs:
       - run:
           name: 'Deploy to Firebase'
           command: |
-            './node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN'
+            './frontend/node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN'
 
 workflows:
   version: 2
