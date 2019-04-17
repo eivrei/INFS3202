@@ -26,7 +26,8 @@ jobs:
       - run:
           name: 'Install dependencies'
           command: |
-            cd frontend && yarn install
+            cd frontend
+            yarn install
             yarn add firebase-tools
             yarn run firebase --version
 
@@ -41,4 +42,6 @@ jobs:
 
       - run:
           name: 'Deploy to Firebase'
-          command: './frontend/node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN'
+          command: |
+          cd frontend
+          './node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN'
