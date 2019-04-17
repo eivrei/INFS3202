@@ -33,6 +33,8 @@ jobs:
           paths:
             - node_modules
 
+      - run: ls -a
+
   build:
     docker:
       - image: circleci/node:$NODE_VERSION
@@ -42,7 +44,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/infs3202
+          at: frontend
 
       - run:
           name: 'Build project'
