@@ -42,8 +42,8 @@ jobs:
   build:
     steps:
       - checkout
-      - attach_workspace
-        at: ~/infs3202
+      - attach_workspace:
+          at: ~/infs3202
 
       - run:
           name: 'Build project'
