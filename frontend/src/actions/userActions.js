@@ -45,7 +45,6 @@ const signIn = (username, password, remember) => {
         if (res.status === 200) {
           Cookies.set('token', res.data.token, remember ? { expires: 7 } : {});
           apiInstance.defaults.headers.common.Authorization = `JWT ${res.data.token}`;
-          console.log(apiInstance.defaults.headers.common.Authorization);
           dispatch(success(res.data.token, remember));
           dispatch(alertActions.success('Successfully signed in'));
           history.push('/my-profile');
