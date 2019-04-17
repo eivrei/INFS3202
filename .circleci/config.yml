@@ -29,9 +29,9 @@ jobs:
           key: dependencies-{{ checksum "./frontend/package.json" }}
 
       - persist_to_workspace:
-          root: ~/infs3202
+          root: frontend
           paths:
-            - ./frontent/node_modules
+            - node_modules
 
   build:
     docker:
@@ -51,12 +51,12 @@ jobs:
       - store_artifacts:
           path: /build
       - persist_to_workspace:
-          root: ~/infs3202
+          root: frontend
           paths:
-            - frontent/node_modules
-            - frontent/build
-            - frontent/.firebaserc
-            - frontent/firebase.json
+            - node_modules
+            - build
+            - .firebaserc
+            - firebase.json
 
   deploy_prod:
     docker:
