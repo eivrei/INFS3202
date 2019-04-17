@@ -31,7 +31,7 @@ jobs:
       - persist_to_workspace:
           root: ~/infs3202
           paths:
-            - frontent/node_modules
+            - ./frontent/node_modules
 
   build:
     docker:
