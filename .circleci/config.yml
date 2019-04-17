@@ -79,10 +79,10 @@ workflows:
       - setup
 
       - build:
-        filters:
-          branches:
-            - master
-            - ci-cd
+          filters:
+            branches:
+              - master
+              - ci-cd
 
       - deploy_prod:
           requires:
