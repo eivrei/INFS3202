@@ -4,7 +4,7 @@
 #
 version: 2
 jobs:
-  build:
+  setup:
     branches:
       only:
         - ci-cd
@@ -25,22 +25,73 @@ jobs:
 
       - run:
           name: 'Install dependencies'
-          command: |
-            cd frontend
-            yarn install
-            yarn add firebase-tools
+          command: cd frontend && yarn install
 
       - save_cache:
           paths:
             - node_modules
           key: dependencies-{{ checksum "./frontend/package.json" }}
 
+      - persist_to_workspace:
+          root: ~/infs3202
+          paths:
+            - node_modules
+            - src
+            - firebase.json
+
+  build:
+    steps:
+      - checkout
+      - attach_workspace
+        at: ~/infs3202
+
       - run:
           name: 'Build project'
           command: cd frontend && API_URL=$API_URL && yarn build
 
+      - store_artifacts:
+          path: /dist
+      - persist_to_workspace:
+          root: ~/infs3202
+          paths:
+            - dist
+            - firebase.json
+
+  deploy_prod:
+    steps:
+      - attach_workspace:
+          at: ~/infs3202
+
+      - run:
+          name: Add firebase tools
+          command: yarn add firebase-tools -D
+
       - run:
           name: 'Deploy to Firebase'
           command: |
-            cd frontend
-            './frontend/node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN'
+            './node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN'
+
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - setup
+      - build:
+          filters:
+            branches:
+              - master
+              - ci-cd
+      # - deploy_stage:
+      #     requires:
+      #       - build
+      #     filters:
+      #       branches:
+      #         - develop
+      - deploy_prod:
+          requires:
+            - build
+          filters:
+            branches:
+              - master
+              - ci-cd
