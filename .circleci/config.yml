@@ -72,13 +72,13 @@ jobs:
 
       - run:
           name: Add firebase tools
-          command: yarn add firebase-tools -D
+          command: cd frontend && yarn add firebase-tools -D
 
       - run: ls -a
 
       - run:
           name: 'Deploy to Firebase'
-          command: firebase deploy --token=$FIREBASE_TOKEN
+          command: cd frontend && yarn run firebase deploy --token=$FIREBASE_TOKEN
 
 workflows:
   version: 2
