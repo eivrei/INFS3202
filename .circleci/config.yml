@@ -31,9 +31,7 @@ jobs:
       - persist_to_workspace:
           root: ~/infs3202
           paths:
-            - node_modules
-            - src
-            - firebase.json
+            - frontent/node_modules
 
   build:
     docker:
@@ -51,12 +49,14 @@ jobs:
           command: cd frontend && API_URL=$API_URL && yarn build
 
       - store_artifacts:
-          path: /dist
+          path: /build
       - persist_to_workspace:
           root: ~/infs3202
           paths:
-            - dist
-            - firebase.json
+            - frontent/node_modules
+            - frontent/build
+            - frontent/.firebaserc
+            - frontent/firebase.json
 
   deploy_prod:
     docker:
