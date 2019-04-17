@@ -15,7 +15,7 @@ jobs:
 
       - restore_cache:
           keys:
-            - dependencies-{{ checksum "./frontend/package.json" }}
+            - dependencies-{{ .Branch }}-{{ checksum "./frontend/package.json" }}
             # fallback to using the latest cache if no exact match is found
             - dependencies-
 
@@ -26,7 +26,7 @@ jobs:
       - save_cache:
           paths:
             - node_modules
-          key: dependencies-{{ checksum "./frontend/package.json" }}
+          key: dependencies-{{ .Branch }}-{{ checksum "./frontend/package.json" }}
 
       - persist_to_workspace:
           root: frontend
