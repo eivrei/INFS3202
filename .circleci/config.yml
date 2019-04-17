@@ -33,8 +33,6 @@ jobs:
           paths:
             - node_modules
 
-      - run: ls -a
-
   build:
     docker:
       - image: circleci/node:$NODE_VERSION
@@ -74,8 +72,6 @@ jobs:
           name: Add firebase tools
           command: cd frontend && yarn add firebase-tools -D
 
-      - run: ls -a
-
       - run:
           name: 'Deploy to Firebase'
           command: cd frontend && yarn run firebase deploy --token=$FIREBASE_TOKEN
@@ -89,10 +85,11 @@ workflows:
             branches:
               only:
                 - master
-                - ci-cd
+
       - build:
           requires:
             - setup
+
       - deploy_prod:
           requires:
             - build
