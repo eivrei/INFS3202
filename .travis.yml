@@ -11,7 +11,9 @@ jobs:
   include:
     - stage: setup
       script: cd ./frontend && yarn install
-      cache: node_modules
+      cache:
+        directories:
+          - frontend/node_modules
 
     - stage: build
       script: cd ./frontend && REACT_APP_API_URL=API_URL yarn build
