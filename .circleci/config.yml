@@ -81,19 +81,15 @@ workflows:
   version: 2
   build_and_deploy:
     jobs:
-      - setup
-
-      - build:
+      - setup:
           filters:
             branches:
-              - master
-              - ci-cd
-
+              only:
+                - master
+                - ci-cd
+      - build:
+          requires:
+            - setup
       - deploy_prod:
           requires:
             - build
-
-          filters:
-            branches:
-              - master
-              - ci-cd
