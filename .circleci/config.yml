@@ -43,5 +43,5 @@ jobs:
       - run:
           name: 'Deploy to Firebase'
           command: |
-          cd frontend
-          './node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN'
+            cd frontend
+            './node_modules/.bin/firebase deploy --token=$FIREBASE_TOKEN'
