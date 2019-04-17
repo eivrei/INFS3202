@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "infs3202-ae667"
+    "production": "infs3202-ae667",
+    "staging": "infs3202-staging"
   }
 }

@@ -58,7 +58,7 @@ jobs:
             - .firebaserc
             - firebase.json
 
-  deploy_prod:
+  deploy_staging:
     docker:
       - image: circleci/node:$NODE_VERSION
 
@@ -74,7 +74,25 @@ jobs:
 
       - run:
           name: 'Deploy to Firebase'
-          command: cd frontend && yarn run firebase deploy --token=$FIREBASE_TOKEN
+          command: cd frontend && yarn run firebase deploy -P staging --token=$FIREBASE_TOKEN
+
+  deploy_production:
+    docker:
+      - image: circleci/node:$NODE_VERSION
+
+    working_directory: ~/infs3202
+
+    steps:
+      - attach_workspace:
+          at: frontend
+
+      - run:
+          name: Add firebase tools
+          command: cd frontend && yarn add firebase-tools -D
+
+      - run:
+          name: 'Deploy to Firebase'
+          command: cd frontend && yarn run firebase deploy -P production --token=$FIREBASE_TOKEN
 
 workflows:
   version: 2
@@ -85,11 +103,26 @@ workflows:
             branches:
               only:
                 - master
+                - dev
+                - ci-cd
 
       - build:
           requires:
             - setup
 
-      - deploy_prod:
+      - deploy_staging:
           requires:
             - build
+          filters:
+            branches:
+              only:
+                - dev
+                - ci-cd
+
+      - deploy_production:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
