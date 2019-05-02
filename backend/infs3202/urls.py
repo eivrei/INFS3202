@@ -32,8 +32,10 @@ authorization_urlpatterns = [
 ]
 
 urlpatterns = [
-    url(r'^api/', include('infs3202.api.urls', namespace='api')),
     url(r'^$', TemplateView.as_view(template_name='landing.html'), name='landing_page'),
+    url(r'^api/', include('infs3202.api.urls', namespace='api')),
+    url(r'^events/', include('infs3202.events.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^authorization/', include(authorization_urlpatterns)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
