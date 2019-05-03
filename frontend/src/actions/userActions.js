@@ -48,9 +48,7 @@ const signIn = (username, password, remember) => {
       })
       .catch(({ response }) => {
         dispatch(failure(response.data));
-        Object.values(response.data).map(errors =>
-          errors.map(e => dispatch(alertActions.error(e)))
-        );
+        dispatch(alertActions.error(response.data));
       });
   };
 };
@@ -79,9 +77,7 @@ const signUp = (email, password, firstName, lastName) => {
       })
       .catch(({ response }) => {
         dispatch(failure(response.data));
-        Object.values(response.data).map(errors =>
-          errors.map(e => dispatch(alertActions.error(e)))
-        );
+        dispatch(alertActions.error(response.data));
       });
   };
 };
@@ -125,9 +121,7 @@ const fetchProfile = () => {
       })
       .catch(({ response }) => {
         dispatch(failure(response.data));
-        Object.values(response.data).map(errors =>
-          errors.map(e => dispatch(alertActions.error(e)))
-        );
+        dispatch(alertActions.error(response.data));
       });
   };
 };
