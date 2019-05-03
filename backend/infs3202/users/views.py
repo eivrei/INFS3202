@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
 from infs3202.users.models import User
@@ -12,6 +13,14 @@ class UserViewSet(viewsets.ModelViewSet):
         elif self.action == 'list':
             return User.objects.all()
         return None
+
+    def get_permissions(self):
+        permission_classes = []
+        if self.action in ['retrieve', 'update', 'partial_update', 'destroy']:
+            permission_classes = [IsAuthenticated]
+        if self.action == 'list':
+            permission_classes = [IsAdminUser]
+        return [permission() for permission in permission_classes]
 
     def get_serializer_class(self):
         return UserCreateAndUpdateSerializer

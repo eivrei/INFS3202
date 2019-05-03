@@ -18,13 +18,12 @@ from django.conf.urls import include, url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.views.generic import TemplateView
-from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token, verify_jwt_token
-
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
 jwt_urlpatterns = [
-    url(r'^token-auth/$', obtain_jwt_token, name='obtain_jwt_token'),
-    url(r'^token-auth/refresh/$', refresh_jwt_token, name='refresh_jwt_token'),
-    url(r'^token-auth/verify/$', verify_jwt_token, name='verify_jwt_token'),
+    url(r'', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    url(r'^refresh/$', TokenRefreshView.as_view(), name='token_refresh'),
+    url(r'^verify/$', TokenVerifyView.as_view(), name='token_verify'),
 ]
 
 authorization_urlpatterns = [
@@ -36,6 +35,6 @@ urlpatterns = [
     url(r'^api/', include('infs3202.api.urls', namespace='api')),
     url(r'^events/', include('infs3202.events.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^authorization/', include(authorization_urlpatterns)),
+    url(r'^token/', include(authorization_urlpatterns)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

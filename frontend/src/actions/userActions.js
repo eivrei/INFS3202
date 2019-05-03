@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { apiInstance, login, get, post, verifyToken } from '../utils/api';
+import { apiInstance, login, get, post } from '../utils/api';
 import { history } from '../utils/history';
 import { alertActions } from './alertActions';
 
@@ -13,10 +13,6 @@ export const userActionTypes = {
   SIGN_UP_FAILURE: 'SIGN_UP_FAILURE',
 
   SIGN_OUT: 'SIGN_OUT',
-
-  VERIFY_USER_REQUEST: 'VERIFY_USER_REQUEST',
-  VERIFY_USER_SUCCESS: 'VERIFY_USER_SUCCESS',
-  VERIFY_USER_FAILURE: 'VERIFY_USER_FAILURE',
 
   FETCH_POFILE_REQUEST: 'FETCH_PROFILE_REQUEST',
   FETCH_POFILE_SUCCESS: 'FETCH_PROFILE_SUCCESS',
@@ -43,18 +39,16 @@ const signIn = (username, password, remember) => {
     })
       .then(res => {
         if (res.status === 200) {
-          Cookies.set('token', res.data.token, remember ? { expires: 7 } : {});
-          apiInstance.defaults.headers.common.Authorization = `JWT ${res.data.token}`;
-          dispatch(success(res.data.token, remember));
+          Cookies.set('token', res.data.access, remember ? { expires: 7 } : {});
+          apiInstance.defaults.headers.common.Authorization = `Bearer ${res.data.access}`;
+          dispatch(success(res.data.access, remember));
           dispatch(alertActions.success('Successfully signed in'));
           history.push('/my-profile');
         }
       })
       .catch(({ response }) => {
         dispatch(failure(response.data));
-        Object.values(response.data).map(errors =>
-          errors.map(e => dispatch(alertActions.error(e)))
-        );
+        dispatch(alertActions.error(response.data));
       });
   };
 };
@@ -83,9 +77,7 @@ const signUp = (email, password, firstName, lastName) => {
       })
       .catch(({ response }) => {
         dispatch(failure(response.data));
-        Object.values(response.data).map(errors =>
-          errors.map(e => dispatch(alertActions.error(e)))
-        );
+        dispatch(alertActions.error(response.data));
       });
   };
 };
@@ -105,41 +97,6 @@ const signOut = () => dispatch => {
 
 const signOutWithoutAlert = () => dispatch => {
   deleteAllUserInfo(dispatch);
-};
-
-const verifyUser = () => {
-  function request(token) {
-    return { type: userActionTypes.VERIFY_USER_REQUEST, token };
-  }
-  function success(token) {
-    return { type: userActionTypes.VERIFY_USER_SUCCESS, token };
-  }
-  function failure(error) {
-    return { type: userActionTypes.VERIFY_USER_FAILURE, error };
-  }
-
-  return async dispatch => {
-    try {
-      const token = await Cookies.get('token');
-      dispatch(request(token));
-      const res = await verifyToken({ token });
-      if (res.status === 200) {
-        apiInstance.defaults.headers.common.Authorization = `JWT ${res.data.token}`;
-        dispatch(success(res.data.token));
-      } else {
-        signOutWithoutAlert();
-        dispatch(failure('Something unexpected happened. Try again later'));
-        dispatch(
-          alertActions.error('Something unexpected happened while verifying user. Try again later')
-        );
-      }
-    } catch (err) {
-      console.error(`Error: ${err}`);
-      signOutWithoutAlert();
-      dispatch(failure(err));
-      dispatch(alertActions.error(err));
-    }
-  };
 };
 
 const fetchProfile = () => {
@@ -164,9 +121,7 @@ const fetchProfile = () => {
       })
       .catch(({ response }) => {
         dispatch(failure(response.data));
-        Object.values(response.data).map(errors =>
-          errors.map(e => dispatch(alertActions.error(e)))
-        );
+        dispatch(alertActions.error(response.data));
       });
   };
 };
@@ -177,6 +132,5 @@ export const userActions = {
   signUp,
   signOut,
   signOutWithoutAlert,
-  verifyUser,
   fetchProfile
 };
