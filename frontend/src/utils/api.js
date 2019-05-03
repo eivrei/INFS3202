@@ -16,7 +16,7 @@ apiInstance.interceptors.request.use(config => {
   const token = Cookies.get('token');
 
   // eslint-disable-next-line
-  config.headers.Authorization = token ? `JWT ${token}` : '';
+  config.headers.Authorization = token ? `Bearer ${token}` : '';
   return config;
 });
 
@@ -33,9 +33,9 @@ export function post(url, body) {
 }
 
 export function login(body) {
-  return authInstance.post('authorization/token-auth/', body);
+  return authInstance.post('token/', body);
 }
 
 export function verifyToken(body) {
-  return authInstance.post('authorization/token-auth/verify/', body);
+  return authInstance.post('token/verify/', body);
 }
