@@ -152,13 +152,15 @@ CORS_ORIGIN_WHITELIST = list(
 # Rest Framework
 
 REST_FRAMEWORK = {
-    'DEFAULT_RENDERER_CLASSES': ['djangorestframework_camel_case.render.CamelCaseJSONRenderer'],
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticatedOrReadOnly'],
+    'DEFAULT_RENDERER_CLASSES': [
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer'
+    ],
     'DEFAULT_PARSER_CLASSES': [
         'djangorestframework_camel_case.parser.CamelCaseJSONParser',
     ],
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.BasicAuthentication',
-    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication'
+    ],
 }

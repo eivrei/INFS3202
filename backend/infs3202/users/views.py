@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, permissions
 from rest_framework.response import Response
 
 from infs3202.users.models import User
@@ -6,6 +6,8 @@ from infs3202.users.serializers import UserCreateAndUpdateSerializer, UserGetSer
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    permission_classes = (permissions.IsAuthenticated,)
+
     def get_queryset(self):
         if self.action == 'retrieve':
             return User.objects.filter(username=self.request.user)
