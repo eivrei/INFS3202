@@ -48,7 +48,7 @@ const signIn = (username, password, remember) => {
       })
       .catch(({ response }) => {
         dispatch(failure(response.data));
-        dispatch(alertActions.error(response.data));
+        dispatch(alertActions.error(response.data.detail));
       });
   };
 };

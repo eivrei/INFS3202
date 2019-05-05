@@ -1,69 +1,55 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import Event from '../assets/event1.jpg';
 import '../styles/landingpage.scss';
+import EventList from './EventList';
+import { eventActions } from '../actions/eventActions';
 
-const Landingpage = () => (
-  <div>
-    <Typography variant="h2" gutterBottom>
-      Upcoming events
-    </Typography>
-    <Grid container justify="space-between">
-      <Grid item xs={12} sm={6}>
-        <Card className="card">
-          <CardActionArea>
-            <CardMedia className="card__image" image={Event} title="Event 3" />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                Lizard
-              </Typography>
-              <Typography component="p">
-                Lizards are a widespread group of squamate reptiles, with over 6,000 species,
-                ranging across all continents except Antarctica
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <Card className="card">
-          <CardActionArea>
-            <CardMedia className="card__image" image={Event} title="Event 3" />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                Lizard
-              </Typography>
-              <Typography component="p">
-                Lizards are a widespread group of squamate reptiles, with over 6,000 species,
-                ranging across all continents except Antarctica
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
-      </Grid>
-      <Grid item xs={12} sm={6}>
-        <Card className="card">
-          <CardActionArea>
-            <CardMedia className="card__image" image={Event} title="Event 3" />
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                Lizard
-              </Typography>
-              <Typography component="p">
-                Lizards are a widespread group of squamate reptiles, with over 6,000 species,
-                ranging across all continents except Antarctica
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-        </Card>
-      </Grid>
-    </Grid>
-  </div>
-);
+class Landingpage extends React.Component {
+  componentDidMount() {
+    const { loadEvents } = this.props;
+    loadEvents();
+  }
 
-export default Landingpage;
+  render() {
+    const { events, isLoggedIn } = this.props;
+    return (
+      <div>
+        <Typography variant="h2" gutterBottom>
+          Upcoming events
+        </Typography>
+        {isLoggedIn && (
+          <Link to="/events/new" className="no-link-decoration">
+            <Button variant="contained" color="primary">
+              + Add new event
+            </Button>
+          </Link>
+        )}
+        <EventList events={events} />
+      </div>
+    );
+  }
+}
+
+Landingpage.propTypes = {
+  events: PropTypes.arrayOf(PropTypes.object).isRequired,
+  loadEvents: PropTypes.func.isRequired,
+  isLoggedIn: PropTypes.bool.isRequired
+};
+
+const mapDispatchToProps = () => dispatch => ({
+  loadEvents: () => dispatch(eventActions.loadAllEvents())
+});
+
+const mapStateToProps = () => state => ({
+  events: state.events.events,
+  isLoggedIn: state.authentication.isLoggedIn
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Landingpage);

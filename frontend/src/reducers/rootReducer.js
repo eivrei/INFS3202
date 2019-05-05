@@ -3,12 +3,14 @@ import authenticationReducer from './authenticationReducer';
 import registerReducer from './registerReducer';
 import alertReducer from './alertReducer';
 import userReducer from './userReducer';
+import eventReducer from './eventReducer';
 
 const rootReducer = combineReducers({
   authentication: authenticationReducer,
   register: registerReducer,
   alert: alertReducer,
-  user: userReducer
+  user: userReducer,
+  events: eventReducer
 });
 
 export default (state, action) => {

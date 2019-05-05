@@ -1,6 +1,8 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { history } from './history';
 import { API_URL, BASE_HEADERS } from '../config';
+import { userActions } from '../actions/userActions';
 
 const authInstance = axios.create({
   baseURL: API_URL,
@@ -19,6 +21,20 @@ apiInstance.interceptors.request.use(config => {
   config.headers.Authorization = token ? `Bearer ${token}` : '';
   return config;
 });
+
+// Log out user if token is expired
+apiInstance.interceptors.response.use(
+  response => {
+    return response;
+  },
+  error => {
+    if (error.response.status === 401) {
+      userActions.signout();
+      history.push('/signIn');
+    }
+    return Promise.reject(error);
+  }
+);
 
 export function get(url) {
   return apiInstance.get(`${url}/`);

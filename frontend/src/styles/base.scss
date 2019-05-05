@@ -20,9 +20,9 @@ a {
   margin: 1em;
 }
 
-.no-link:hover {
+.no-link-decoration:hover {
   text-decoration: none !important;
-  color: #007bff;
+  color: #inherit;
 }
 
 .form {
