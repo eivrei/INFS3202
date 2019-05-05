@@ -8,6 +8,7 @@ const initialState = {
   nextPage: null,
   events: [],
   currentEvent: null,
+  searchText: '',
   error: false
 };
 
@@ -39,6 +40,9 @@ export default (state = initialState, action) => {
       return { ...state, isSubmitting: false };
     case eventActionTypes.CREATE_EVENT_FAILURE:
       return { ...state, isSubmitting: false, error: action.error };
+
+    case eventActionTypes.SEARCH_EVENT:
+      return { ...state, searchText: action.searchText };
     default:
       return state;
   }

@@ -14,8 +14,20 @@ class Landingpage extends React.Component {
     loadEvents();
   }
 
+  filterEvents = () => {
+    const { events, searchText } = this.props;
+    if (searchText !== '') {
+      return events.filter(event => event.title.toLowerCase().includes(searchText.toLowerCase()));
+    }
+    return events;
+  };
+
   render() {
     const { events, isLoggedIn } = this.props;
+
+    const filteredEvents = this.filterEvents();
+    const isFiltered = filteredEvents.length !== events.length;
+
     return (
       <div>
         <Typography variant="h2" gutterBottom>
@@ -28,7 +40,7 @@ class Landingpage extends React.Component {
             </Button>
           </Link>
         )}
-        <EventList events={events} />
+        <EventList events={filteredEvents} isFiltered={isFiltered} />
       </div>
     );
   }
@@ -37,7 +49,8 @@ class Landingpage extends React.Component {
 Landingpage.propTypes = {
   events: PropTypes.arrayOf(PropTypes.object).isRequired,
   loadEvents: PropTypes.func.isRequired,
-  isLoggedIn: PropTypes.bool.isRequired
+  isLoggedIn: PropTypes.bool.isRequired,
+  searchText: PropTypes.string.isRequired
 };
 
 const mapDispatchToProps = () => dispatch => ({
@@ -46,7 +59,8 @@ const mapDispatchToProps = () => dispatch => ({
 
 const mapStateToProps = () => state => ({
   events: state.events.events,
-  isLoggedIn: state.authentication.isLoggedIn
+  isLoggedIn: state.authentication.isLoggedIn,
+  searchText: state.events.searchText
 });
 
 export default connect(

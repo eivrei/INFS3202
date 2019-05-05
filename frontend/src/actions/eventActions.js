@@ -109,9 +109,14 @@ const createNewEvent = data => {
   };
 };
 
+const searchEvent = searchText => dispatch => {
+  dispatch({ type: eventActionTypes.SEARCH_EVENT, searchText });
+};
+
 // All possible user actions
 export const eventActions = {
   loadAllEvents,
   loadEvent,
-  createNewEvent
+  createNewEvent,
+  searchEvent
 };
