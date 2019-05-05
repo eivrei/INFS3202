@@ -8,8 +8,6 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 
-import Event from '../assets/event1.jpg';
-
 const EventCard = ({ id, title, image, shortDescription }) => (
   <Grid item xs={12} sm={6}>
     <Link to={`events/${id}`} style={{ textDecoration: 'none' }}>

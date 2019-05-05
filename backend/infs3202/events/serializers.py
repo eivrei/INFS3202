@@ -34,7 +34,7 @@ class EventDetailSerializer(serializers.ModelSerializer):
 
 class EventCreateSerializer(serializers.ModelSerializer):
     image = Base64ImageField(required=False)
-    
+
     class Meta:
         model = Event
         fields = (

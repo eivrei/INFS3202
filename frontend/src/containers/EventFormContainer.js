@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -71,7 +70,6 @@ class EventFormContainer extends React.Component {
     if (formData.image === '') {
       delete formData.image;
     }
-    console.log(formData.image);
 
     try {
       createEvent(formData);
