@@ -9,6 +9,8 @@ import Landingpage from './components/Landingpage';
 import Layout from './components/Layout';
 import SignInContainer from './containers/SignInContainer';
 import SignUpContainer from './containers/SignUpContainer';
+import EventDetailContainer from './containers/EventDetailContainer';
+import EventFormContainer from './containers/EventFormContainer';
 import NoMatch from './components/NoMatch';
 import PrivateRoute from './containers/PrivateRoute';
 import Profile from './components/Profile';
@@ -30,6 +32,8 @@ const App = ({ alert, clearAlert }) => (
           <Route path="/" exact component={Landingpage} />
           <Route path="/sign-in" component={SignInContainer} />
           <Route path="/sign-up" component={SignUpContainer} />
+          <Route exact path="/events/new" component={EventFormContainer} />
+          <Route exact path="/events/:id" component={EventDetailContainer} />
           <PrivateRoute exact path="/my-profile" component={Profile} />
           <Route component={NoMatch} />
         </Switch>

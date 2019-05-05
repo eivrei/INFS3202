@@ -2,19 +2,21 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
 
-const FormInput = ({ required, id, name, onBlur, label, error, ...inputProps }) => (
+const FormSelect = ({ required, id, name, onBlur, label, error, children, ...selectProps }) => (
   <FormControl margin="normal" required={required} fullWidth>
     <InputLabel htmlFor={id}>{label}</InputLabel>
-    <Input
+    <Select
       id={id}
       name={name}
       aria-describedby={`${id}-error-text`}
       onBlur={() => onBlur(name)}
-      {...inputProps}
-    />
+      {...selectProps}
+    >
+      {children}
+    </Select>
     {error && (
       <FormHelperText id={`${id}-error-text`} error>
         {error}
@@ -23,26 +25,22 @@ const FormInput = ({ required, id, name, onBlur, label, error, ...inputProps }) 
   </FormControl>
 );
 
-FormInput.propTypes = {
+FormSelect.propTypes = {
   required: PropTypes.bool.isRequired,
   id: PropTypes.string.isRequired,
   type: PropTypes.string,
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  autoComplete: PropTypes.string,
   onChange: PropTypes.func.isRequired,
   onBlur: PropTypes.func,
   value: PropTypes.string.isRequired,
-  autoFocus: PropTypes.bool,
   error: PropTypes.oneOfType([PropTypes.bool, PropTypes.string])
 };
 
-FormInput.defaultProps = {
+FormSelect.defaultProps = {
   type: 'text',
-  autoFocus: false,
-  autoComplete: '',
   error: false,
   onBlur: () => {}
 };
 
-export default FormInput;
+export default FormSelect;
