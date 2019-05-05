@@ -143,7 +143,7 @@ MEDIA_URL = '/uploads/'
 
 # CORS
 CORS_ORIGIN_WHITELIST = list(
-    {'127.0.0.1:3000', 'localhost:3000', 'thebigevent.xyz', 'www.thebigevent.xyz'}
+    {'127.0.0.1:3000', 'localhost:3000', 'thebigevent.xyz', 'www.thebigevent.xyz', 'staging.thebigevent.xyz', 'www.staging.thebigevent.xyz'}
 )
 
 # Rest Framework
