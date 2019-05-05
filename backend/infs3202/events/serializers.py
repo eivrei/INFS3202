@@ -1,8 +1,9 @@
 from rest_framework import serializers
+from drf_extra_fields.fields import Base64ImageField
 from .models import Event
 
 
-class EventSerializer(serializers.ModelSerializer):
+class EventListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
         fields = (
@@ -24,7 +25,7 @@ class EventDetailSerializer(serializers.ModelSerializer):
             'type',
             'location',
             'start_time',
-            'created_at'
+            'created_at',
             'image',
             'max_number_of_tickets',
             'visible'
@@ -32,6 +33,8 @@ class EventDetailSerializer(serializers.ModelSerializer):
 
 
 class EventCreateSerializer(serializers.ModelSerializer):
+    image = Base64ImageField(required=False)
+    
     class Meta:
         model = Event
         fields = (

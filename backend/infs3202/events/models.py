@@ -12,7 +12,7 @@ class Event(models.Model):
     location = models.CharField(max_length=70)
     start_time = models.DateTimeField()
     created_at = models.DateTimeField(default=datetime.now)
-    image = models.ImageField(default="default.jpg")
+    image = models.ImageField(default="default.jpg", blank=True)
     max_number_of_tickets = models.IntegerField()
     visible = models.BooleanField(default=True)
 
