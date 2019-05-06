@@ -5,7 +5,7 @@ const initialState = {
   isSubmitting: false,
   count: 0,
   previousPage: null,
-  nextPage: null,
+  nextPage: '1',
   events: [],
   currentEvent: null,
   searchText: '',
@@ -25,7 +25,7 @@ export default (state = initialState, action) => {
         count: action.count,
         previousPage: action.previousPage,
         nextPage: action.nextPage,
-        events: action.events
+        events: [...state.events, ...action.events]
       };
     case eventActionTypes.FETCH_EVENT_SUCCESS:
       return { ...state, isFetching: false, currentEvent: action.event };
