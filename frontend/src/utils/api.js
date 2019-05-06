@@ -37,7 +37,7 @@ apiInstance.interceptors.response.use(
 );
 
 export function get(url) {
-  return apiInstance.get(`${url}/`);
+  return apiInstance.get(`${url}`);
 }
 
 export function put(url, body) {

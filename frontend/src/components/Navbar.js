@@ -12,8 +12,9 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import { userActions } from '../actions/userActions';
+import { eventActions } from '../actions/eventActions';
 
-const Navbar = ({ location, isLoggedIn, handleSignOut }) => (
+const Navbar = ({ location, isLoggedIn, handleSignOut, search, searchText }) => (
   <div className="navbar">
     <AppBar position="sticky" color="default" className="app-bar">
       <Toolbar>
@@ -48,7 +49,12 @@ const Navbar = ({ location, isLoggedIn, handleSignOut }) => (
           <div className="icon">
             <SearchIcon />
           </div>
-          <InputBase placeholder="Search…" className="input" />
+          <InputBase
+            placeholder="Search…"
+            className="input"
+            onChange={e => search(e.target.value)}
+            value={searchText}
+          />
         </div>
 
         {isLoggedIn ? (
@@ -72,14 +78,19 @@ const Navbar = ({ location, isLoggedIn, handleSignOut }) => (
 );
 
 Navbar.propTypes = {
-  isLoggedIn: PropTypes.bool.isRequired
+  isLoggedIn: PropTypes.bool.isRequired,
+  searchText: PropTypes.string.isRequired,
+  search: PropTypes.func.isRequired
 };
 
 export const mapStateToProps = state => ({
-  isLoggedIn: state.authentication.isLoggedIn
+  isLoggedIn: state.authentication.isLoggedIn,
+  searchText: state.events.searchText
 });
+
 export const mapDispatchToProps = dispatch => ({
-  handleSignOut: () => dispatch(userActions.signOut())
+  handleSignOut: () => dispatch(userActions.signOut()),
+  search: searchText => dispatch(eventActions.searchEvent(searchText))
 });
 
 export default withRouter(

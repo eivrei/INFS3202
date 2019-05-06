@@ -5,9 +5,10 @@ const initialState = {
   isSubmitting: false,
   count: 0,
   previousPage: null,
-  nextPage: null,
+  nextPage: '1',
   events: [],
   currentEvent: null,
+  searchText: '',
   error: false
 };
 
@@ -24,7 +25,7 @@ export default (state = initialState, action) => {
         count: action.count,
         previousPage: action.previousPage,
         nextPage: action.nextPage,
-        events: action.events
+        events: [...state.events, ...action.events]
       };
     case eventActionTypes.FETCH_EVENT_SUCCESS:
       return { ...state, isFetching: false, currentEvent: action.event };
@@ -39,6 +40,9 @@ export default (state = initialState, action) => {
       return { ...state, isSubmitting: false };
     case eventActionTypes.CREATE_EVENT_FAILURE:
       return { ...state, isSubmitting: false, error: action.error };
+
+    case eventActionTypes.SEARCH_EVENT:
+      return { ...state, searchText: action.searchText };
     default:
       return state;
   }

@@ -5,7 +5,8 @@ const initialState = {
   firstName: '',
   lastName: '',
   email: '',
-  id: ''
+  id: '',
+  emailIsValidated: false
 };
 
 export default (state = initialState, action) => {

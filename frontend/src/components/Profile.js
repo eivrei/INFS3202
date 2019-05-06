@@ -30,6 +30,10 @@ class Profile extends React.Component {
           <strong>Email: </strong>
           {user.email}
         </Typography>
+        <Typography>
+          <strong>Email is validated? </strong>
+          {user.emailIsValidated ? 'Yes, good boy!' : 'No, get it done...'}
+        </Typography>
       </div>
     );
   }

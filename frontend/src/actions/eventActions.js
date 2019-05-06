@@ -18,7 +18,7 @@ export const eventActionTypes = {
   CREATE_EVENT_FAILURE: 'CREATE_EVENT_FAILURE'
 };
 
-const loadAllEvents = () => {
+const loadAllEvents = page => {
   function request() {
     return { type: eventActionTypes.FETCH_ALL_EVENTS_REQUEST };
   }
@@ -27,8 +27,8 @@ const loadAllEvents = () => {
       type: eventActionTypes.FETCH_ALL_EVENTS_SUCCESS,
       events: data.results,
       count: data.count,
-      nextPage: data.next,
-      previousPage: data.previous
+      nextPage: data.next === null ? null : data.next.slice(-1),
+      previousPage: data.previous === null ? null : data.previous.slice(-1)
     };
   }
   function failure(error) {
@@ -38,7 +38,7 @@ const loadAllEvents = () => {
   return async dispatch => {
     dispatch(request());
 
-    await get('/events')
+    await get(`/events/?page=${page}`)
       .then(res => {
         dispatch(success(res.data));
       })
@@ -109,9 +109,14 @@ const createNewEvent = data => {
   };
 };
 
+const searchEvent = searchText => dispatch => {
+  dispatch({ type: eventActionTypes.SEARCH_EVENT, searchText });
+};
+
 // All possible user actions
 export const eventActions = {
   loadAllEvents,
   loadEvent,
-  createNewEvent
+  createNewEvent,
+  searchEvent
 };
