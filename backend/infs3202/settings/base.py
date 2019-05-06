@@ -82,8 +82,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'infs3202',
         'USER': 'infs3202',
-        'PASSWORD': '',
-        'HOST': 'localhost'
+        'PASSWORD': '',  # Change this
+        'HOST': 'localhost'  # Change this
     }
 }
 
@@ -164,3 +164,13 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 6
 }
+
+# Email
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'email'  # Change this
+EMAIL_HOST_PASSWORD = 'password'  # Change this
+EMAIL_USE_TLS = True
+
+FRONTEND_URL = 'http://127.0.0.1:3000'
+

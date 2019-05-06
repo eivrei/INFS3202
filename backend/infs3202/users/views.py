@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 
@@ -31,3 +32,18 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         serializer = UserGetSerializer(User.objects.get(pk=pk))
         return Response(serializer.data)
+
+    @action(detail=False)
+    def verify_email(self, request):
+        key = request.GET.get('key', None)
+        # Account for the extra "/" appended on get-requests frontend.
+        pk = request.GET.get('email', None).split('/')[0]
+        usr = User.objects.get(email=pk)
+
+        if usr.email_verification_key == key:
+            usr.email_is_validated = True
+            usr.save()
+            return Response(data={'message': 'Email verified!'})
+        else:
+            return Response(status=400, data={'message': 'Invalid Key'})
+
