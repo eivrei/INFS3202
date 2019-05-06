@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import { userActions } from '../actions/userActions';
 
@@ -12,7 +13,7 @@ class Profile extends React.Component {
 
   render() {
     const { isFetching, user } = this.props;
-    if (isFetching) return null;
+    if (isFetching) return <CircularProgress className="loader" />;
     return (
       <div>
         <Typography variant="h2" gutterBottom>

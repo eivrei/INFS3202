@@ -43,8 +43,13 @@ const loadAllEvents = page => {
         dispatch(success(res.data));
       })
       .catch(({ response }) => {
-        dispatch(failure(response.data.detail));
-        dispatch(alertActions.error('Something went wrong while fetching all events'));
+        if (response === undefined) {
+          dispatch(failure('No connection with server'));
+          dispatch(alertActions.error('Connection error with server. Try again later.'));
+        } else {
+          dispatch(failure(response.data.detail));
+          dispatch(alertActions.error('Something went wrong while fetching all events'));
+        }
       });
   };
 };
@@ -71,8 +76,15 @@ const loadEvent = id => {
         dispatch(success(res.data));
       })
       .catch(({ response }) => {
-        dispatch(failure(response.data.detail));
-        dispatch(alertActions.error(`Something went wrong while fetching the event with id ${id}`));
+        if (response === undefined) {
+          dispatch(failure('No connection with server'));
+          dispatch(alertActions.error('Connection error with server. Try again later.'));
+        } else {
+          dispatch(failure(response.data.detail));
+          dispatch(
+            alertActions.error(`Something went wrong while fetching the event with id ${id}`)
+          );
+        }
       });
   };
 };
@@ -103,8 +115,13 @@ const createNewEvent = data => {
         history.push('/');
       })
       .catch(({ response }) => {
-        dispatch(failure(response.data.type));
-        dispatch(alertActions.error('Something went wrong while creating new event'));
+        if (response === undefined) {
+          dispatch(failure('No connection with server'));
+          dispatch(alertActions.error('Connection error with server. Try again later.'));
+        } else {
+          dispatch(failure(response.data.type));
+          dispatch(alertActions.error('Something went wrong while creating new event'));
+        }
       });
   };
 };

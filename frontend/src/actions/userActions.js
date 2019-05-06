@@ -47,8 +47,13 @@ const signIn = (username, password, remember) => {
         }
       })
       .catch(({ response }) => {
-        dispatch(failure(response.data));
-        dispatch(alertActions.error(response.data.detail));
+        if (response === undefined) {
+          dispatch(failure('No connection with server'));
+          dispatch(alertActions.error('Connection error with server. Try again later.'));
+        } else {
+          dispatch(failure(response.data));
+          dispatch(alertActions.error(response.data.detail));
+        }
       });
   };
 };
@@ -76,8 +81,13 @@ const signUp = (email, password, firstName, lastName) => {
         }
       })
       .catch(({ response }) => {
-        dispatch(failure(response.data));
-        dispatch(alertActions.error(response.data));
+        if (response === undefined) {
+          dispatch(failure('No connection with server'));
+          dispatch(alertActions.error('Connection error with server. Try again later.'));
+        } else {
+          dispatch(failure(response.data));
+          dispatch(alertActions.error(response.data));
+        }
       });
   };
 };
@@ -120,8 +130,13 @@ const fetchProfile = () => {
         }
       })
       .catch(({ response }) => {
-        dispatch(failure(response.data));
-        dispatch(alertActions.error(response.data));
+        if (response === undefined) {
+          dispatch(failure('No connection with server'));
+          dispatch(alertActions.error('Connection error with server. Try again later.'));
+        } else {
+          dispatch(failure(response.data));
+          dispatch(alertActions.error(response.data));
+        }
       });
   };
 };
