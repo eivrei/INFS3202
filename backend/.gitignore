@@ -109,6 +109,7 @@ db.sqlite3
 
 # INFS3202
 media/
+static/
 infs3202/settings/local.py
 
 # VScode
