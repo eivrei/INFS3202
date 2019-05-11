@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import InfiniteScroll from 'react-infinite-scroller';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 import '../styles/landingpage.scss';
 import EventList from './EventList';
@@ -40,11 +41,7 @@ class Landingpage extends React.Component {
           pageStart={0}
           loadMore={loadEvents}
           hasMore={nextPage !== null}
-          loader={
-            <div className="loader" key={0}>
-              Loading ...
-            </div>
-          }
+          loader={<CircularProgress className="loader" />}
         >
           <EventList events={filteredEvents} isFiltered={isFiltered} />
         </InfiniteScroll>

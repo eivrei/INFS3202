@@ -32,7 +32,7 @@ export default (state = initialState, action) => {
 
     case eventActionTypes.FETCH_ALL_EVENTS_FAILURE:
     case eventActionTypes.FETCH_EVENT_FAILURE:
-      return { ...state, isFetching: false, error: action.error };
+      return { ...state, isFetching: false, nextPage: null, error: action.error };
 
     case eventActionTypes.CREATE_EVENT_REQUEST:
       return { ...state, isSubmitting: true };

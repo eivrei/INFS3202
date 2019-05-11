@@ -73,7 +73,7 @@ jobs:
           command: cd frontend && yarn add firebase-tools -D
 
       - run:
-          name: 'Deploy to Firebase'
+          name: 'Deploy frontend to Firebase'
           command: cd frontend && yarn run firebase deploy -P staging --token=$FIREBASE_TOKEN
 
   deploy_production:
@@ -93,6 +93,14 @@ jobs:
       - run:
           name: 'Deploy to Firebase'
           command: cd frontend && yarn run firebase deploy -P production --token=$FIREBASE_TOKEN
+
+      - add_ssh_keys:
+          fingerprints:
+            - "a6:1f:63:f3:d9:2b:5f:89:46:47:21:a5:13:d4:c6:60"
+
+      - run:
+          name: Deploy backend to AWS
+          command: ssh -o StrictHostKeyChecking=no -l $SSH_USER $SSH_HOSTNAME 'cd infs3202 && git pull && cd backend && source venv/bin/activate && pip install -r requirements.txt && python manage.py migrate --settings=infs3202.settings.production && sudo systemctl restart gunicorn'
 
 workflows:
   version: 2
