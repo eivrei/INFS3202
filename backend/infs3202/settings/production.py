@@ -14,3 +14,13 @@ FRONTEND_URL = env('FRONTEND_URL')
 
 EMAIL_HOST_USER = env('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'infs3202',
+        'USER': 'infs3202',
+        'PASSWORD': env('DATABASE_PASSWORD'),
+        'HOST': 'localhost'
+    }
+}
