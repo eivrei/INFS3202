@@ -7,6 +7,8 @@ import Button from '@material-ui/core/Button';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { RECAPTCHA_KEY } from '../config';
 import FormInput from '../components/FormInput';
 import { userActions } from '../actions/userActions';
 
@@ -17,6 +19,7 @@ class SignUpContainer extends React.Component {
     email: '',
     password: '',
     confirmedPassword: '',
+    recaptcha: false,
     errors: {
       firstName: false,
       lastName: false,
@@ -112,6 +115,14 @@ class SignUpContainer extends React.Component {
     this.setState({ password: '', confirmedPassword: '' });
   };
 
+  verifyRecaptcha = value => {
+    this.setState({ recaptcha: value });
+  };
+
+  expiredRecaptcha = () => {
+    this.setState({ recaptcha: false });
+  };
+
   handleSubmit = e => {
     e.preventDefault();
     const { email, password, firstName, lastName } = this.state;
@@ -121,7 +132,15 @@ class SignUpContainer extends React.Component {
   };
 
   render() {
-    const { firstName, lastName, email, password, confirmedPassword, errors } = this.state;
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      confirmedPassword,
+      recaptcha,
+      errors
+    } = this.state;
     const { isRegistering } = this.props;
 
     const isErrors = Object.values(errors).filter(error => error !== false).length !== 0;
@@ -201,12 +220,17 @@ class SignUpContainer extends React.Component {
                 By submitting, you agree to our Terms and Purchase Policy, and understand your
                 information will be used as described in our Privacy Policy.
               </Typography>
+              <ReCAPTCHA
+                sitekey={RECAPTCHA_KEY}
+                onChange={this.verifyRecaptcha}
+                onExpired={this.expiredRecaptcha}
+              />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 color="primary"
-                disabled={isErrors || isRegistering}
+                disabled={isErrors || isRegistering || !recaptcha}
               >
                 Sign up
               </Button>
