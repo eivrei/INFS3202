@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'infs3202.users',
-    'infs3202.events'
+    'infs3202.events',
+    'infs3202.password_reset'
 ]
 
 MIDDLEWARE = [
@@ -82,8 +83,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'infs3202',
         'USER': 'infs3202',
-        'PASSWORD': '',  # Change this
-        'HOST': 'localhost'  # Change this
+        'PASSWORD': '',
+        'HOST': 'localhost'
     }
 }
 

@@ -5,7 +5,7 @@ from .serializers import EventListSerializer, EventCreateSerializer, EventDetail
 
 
 class EventViewSet(viewsets.ModelViewSet):
-    queryset = Event.objects.all()
+    queryset = Event.objects.get_queryset().order_by('id')
 
     def get_serializer_class(self):
         if self.action in ['create', 'update', 'partial_update']:
