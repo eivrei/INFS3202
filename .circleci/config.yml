@@ -46,7 +46,7 @@ jobs:
 
       - run:
           name: 'Build project'
-          command: cd frontend && REACT_APP_API_URL=$API_URL RECAPTCHA_KEY=$RECAPTCHA_KEY yarn build
+          command: cd frontend && REACT_APP_API_URL=$API_URL REACT_APP_RECAPTCHA_KEY=$RECAPTCHA_KEY yarn build
 
       - store_artifacts:
           path: frontend/build
@@ -91,7 +91,7 @@ jobs:
           command: cd frontend && yarn add firebase-tools -D
 
       - run:
-          name: 'Deploy to Firebase'
+          name: 'Deploy frontend to Firebase'
           command: cd frontend && yarn run firebase deploy -P production --token=$FIREBASE_TOKEN
 
       - add_ssh_keys:
