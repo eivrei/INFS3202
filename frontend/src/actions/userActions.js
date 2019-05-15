@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { apiInstance, login, get, post } from '../utils/api';
+import { apiInstance, login, get, post, put } from '../utils/api';
 import { history } from '../utils/history';
 import { alertActions } from './alertActions';
 
@@ -24,7 +24,13 @@ export const userActionTypes = {
 
   PERFORM_PASSWORD_RESET_REQUEST: 'PERFORM_PASSWORD_RESET_REQUEST',
   PERFORM_PASSWORD_RESET_SUCCESS: 'PERFORM_PASSWORD_RESET_SUCCESS',
-  PERFORM_PASSWORD_RESET_FAILURE: 'PERFORM_PASSWORD_RESET_FAILURE'
+  PERFORM_PASSWORD_RESET_FAILURE: 'PERFORM_PASSWORD_RESET_FAILURE',
+
+  EDIT_EMAIL: 'EDIT_EMAIL',
+
+  CHANGE_EMAIL_REQUEST: 'CHANGE_EMAIL_REQUEST',
+  CHANGE_EMAIL_SUCCESS: 'CHANGE_EMAIL_SUCCESS',
+  CHANGE_EMAIL_FAILURE: 'CHANGE_EMAIL_FAILURE'
 };
 
 const signIn = (username, password, remember) => {
@@ -225,6 +231,44 @@ const performPasswordReset = (uuid, password) => {
   };
 };
 
+const editEmail = email => ({
+  type: userActionTypes.EDIT_EMAIL,
+  email
+});
+
+const changeEmail = (id, email) => {
+  function request() {
+    return { type: userActionTypes.PERFORM_PASSWORD_RESET_REQUEST, id, email };
+  }
+  function success() {
+    return { type: userActionTypes.PERFORM_PASSWORD_RESET_SUCCESS };
+  }
+  function failure(error) {
+    return { type: userActionTypes.PERFORM_PASSWORD_RESET_FAILURE, error };
+  }
+
+  return async dispatch => {
+    dispatch(request());
+
+    await put(`/users/${id}`, { email })
+      .then(res => {
+        if (res.status === 200) {
+          dispatch(success());
+          dispatch(alertActions.success('Your email is successfully changed.'));
+        }
+      })
+      .catch(({ response }) => {
+        if (response === undefined) {
+          dispatch(failure('No connection with server'));
+          dispatch(alertActions.error('Connection error with server. Try again later.'));
+        } else {
+          dispatch(failure(response.data));
+          dispatch(alertActions.error(response.data));
+        }
+      });
+  };
+};
+
 // All possible user actions
 export const userActions = {
   signIn,
@@ -233,5 +277,7 @@ export const userActions = {
   signOutWithoutAlert,
   fetchProfile,
   requestPasswordReset,
-  performPasswordReset
+  performPasswordReset,
+  editEmail,
+  changeEmail
 };

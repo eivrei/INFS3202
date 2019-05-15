@@ -40,6 +40,24 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = UserGetSerializer(User.objects.get(pk=pk))
         return Response(serializer.data)
 
+    def update(self, request, pk=None, partial=True):
+        user = User.objects.filter(username=request.user)[0]
+
+        if user.id != int(pk) or request.user != user:
+            return Response({'error': 'Cannot change information of other users'}, status=403)
+
+        key_set = request.data.keys()
+        if 'email' not in key_set:
+            return Response({'error': 'New email must be provided.'}, status=400)
+
+        new_email = request.data['email']
+
+        user.username = new_email
+        user.email = new_email
+        user.save()
+        serializer = UserCreateAndUpdateSerializer(user)
+        return Response(serializer.data)
+
     @action(detail=False)
     def verify_email(self, request):
         key = request.GET.get('key', None)
