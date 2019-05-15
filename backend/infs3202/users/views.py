@@ -1,3 +1,7 @@
+import json
+from datetime import datetime, timedelta
+from pytz import timezone
+
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
@@ -5,6 +9,9 @@ from rest_framework.response import Response
 
 from infs3202.users.models import User
 from infs3202.users.serializers import UserCreateAndUpdateSerializer, UserGetSerializer
+from infs3202.password_reset.models import PasswordReset
+
+from infs3202.utils.email import send_password_reset_request
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -33,6 +40,24 @@ class UserViewSet(viewsets.ModelViewSet):
         serializer = UserGetSerializer(User.objects.get(pk=pk))
         return Response(serializer.data)
 
+    def update(self, request, pk=None, partial=True):
+        user = User.objects.filter(username=request.user)[0]
+
+        if user.id != int(pk) or request.user != user:
+            return Response({'error': 'Cannot change information of other users'}, status=403)
+
+        key_set = request.data.keys()
+        if 'email' not in key_set:
+            return Response({'error': 'New email must be provided.'}, status=400)
+
+        new_email = request.data['email']
+
+        user.username = new_email
+        user.email = new_email
+        user.save()
+        serializer = UserCreateAndUpdateSerializer(user)
+        return Response(serializer.data)
+
     @action(detail=False)
     def verify_email(self, request):
         key = request.GET.get('key', None)
@@ -47,3 +72,48 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return Response(status=400, data={'message': 'Invalid Key'})
 
+    @action(detail=False, methods=['POST'])
+    def request_reset_password(self, request, pk=None):
+        values = json.loads(request.body)
+        origin = request.META.get('HTTP_REFERER')
+        if 'username' not in values.keys():
+            return Response({'username': 'is required'}, status=400)
+
+        username = values['username']
+        user = User.objects.filter(username=username).first()
+
+        if not user:
+            return Response({'username': 'does not exist'}, status=400)
+
+        send_password_reset_request(user, origin)
+        return Response(status=201)
+
+    @action(detail=False, methods=['POST'])
+    def perform_password_reset(self, request, pk=None):
+        values = json.loads(request.body)
+        if 'uuid' not in values.keys() or 'password' not in values.keys():
+            return Response({'uuid': 'is required', 'password': 'is required'}, 400)
+
+        now = datetime.now().replace(tzinfo=timezone('Australia/Brisbane'))
+        reset_request = PasswordReset.objects.filter(uuid=values['uuid']).first()
+
+        if not reset_request:
+            return Response(status=404)
+
+        delta = now - reset_request.timestamp
+
+        max_age = timedelta(hours=12)
+
+        if delta > max_age:
+            return Response(status=410)
+
+        user = reset_request.user
+
+        password = values['password']
+
+        User.validate_password(password)
+        user.set_password(password)
+
+        user.save()
+
+        return Response()

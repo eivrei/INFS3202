@@ -46,7 +46,7 @@ jobs:
 
       - run:
           name: 'Build project'
-          command: cd frontend && REACT_APP_API_URL=$API_URL yarn build
+          command: cd frontend && REACT_APP_API_URL=$API_URL RECAPTCHA_KEY=$RECAPTCHA_KEY yarn build
 
       - store_artifacts:
           path: frontend/build

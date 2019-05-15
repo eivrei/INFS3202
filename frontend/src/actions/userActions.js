@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie';
-import { apiInstance, login, get, post } from '../utils/api';
+import { apiInstance, login, get, post, put } from '../utils/api';
 import { history } from '../utils/history';
 import { alertActions } from './alertActions';
 
@@ -16,7 +16,21 @@ export const userActionTypes = {
 
   FETCH_POFILE_REQUEST: 'FETCH_PROFILE_REQUEST',
   FETCH_POFILE_SUCCESS: 'FETCH_PROFILE_SUCCESS',
-  FETCH_POFILE_FAILURE: 'FETCH_PROFILE_FAILURE'
+  FETCH_POFILE_FAILURE: 'FETCH_PROFILE_FAILURE',
+
+  NEW_PASSWORD_RESET_REQUEST: 'NEW_PASSWORD_RESET_REQUEST',
+  NEW_PASSWORD_RESET_SUCCESS: 'NEW_PASSWORD_RESET_SUCCESS',
+  NEW_PASSWORD_RESET_FAILURE: 'NEW_PASSWORD_RESET_FAILURE',
+
+  PERFORM_PASSWORD_RESET_REQUEST: 'PERFORM_PASSWORD_RESET_REQUEST',
+  PERFORM_PASSWORD_RESET_SUCCESS: 'PERFORM_PASSWORD_RESET_SUCCESS',
+  PERFORM_PASSWORD_RESET_FAILURE: 'PERFORM_PASSWORD_RESET_FAILURE',
+
+  EDIT_EMAIL: 'EDIT_EMAIL',
+
+  CHANGE_EMAIL_REQUEST: 'CHANGE_EMAIL_REQUEST',
+  CHANGE_EMAIL_SUCCESS: 'CHANGE_EMAIL_SUCCESS',
+  CHANGE_EMAIL_FAILURE: 'CHANGE_EMAIL_FAILURE'
 };
 
 const signIn = (username, password, remember) => {
@@ -141,11 +155,129 @@ const fetchProfile = () => {
   };
 };
 
+const requestPasswordReset = email => {
+  function request() {
+    return { type: userActionTypes.NEW_PASSWORD_RESET_REQUEST, email };
+  }
+  function success() {
+    return { type: userActionTypes.NEW_PASSWORD_RESET_SUCCESS };
+  }
+  function failure(error) {
+    return { type: userActionTypes.NEW_PASSWORD_RESET_FAILURE, error };
+  }
+
+  return async dispatch => {
+    dispatch(request());
+
+    await post('/users/request_reset_password', { username: email })
+      .then(res => {
+        if (res.status === 201) {
+          dispatch(success());
+          dispatch(
+            alertActions.success(
+              'An email is sent to you for confirmation of the password reset. Please check your email to proceed password reset.'
+            )
+          );
+          history.push('/');
+        }
+      })
+      .catch(({ response }) => {
+        if (response === undefined) {
+          dispatch(failure('No connection with server'));
+          dispatch(alertActions.error('Connection error with server. Try again later.'));
+        } else {
+          dispatch(failure(response.data));
+          dispatch(alertActions.error(response.data));
+        }
+      });
+  };
+};
+
+const performPasswordReset = (uuid, password) => {
+  function request() {
+    return { type: userActionTypes.PERFORM_PASSWORD_RESET_REQUEST, uuid };
+  }
+  function success() {
+    return { type: userActionTypes.PERFORM_PASSWORD_RESET_SUCCESS };
+  }
+  function failure(error) {
+    return { type: userActionTypes.PERFORM_PASSWORD_RESET_FAILURE, error };
+  }
+
+  return async dispatch => {
+    dispatch(request());
+
+    await post('/users/perform_password_reset', { uuid, password })
+      .then(res => {
+        if (res.status === 200) {
+          dispatch(success());
+          dispatch(
+            alertActions.success(
+              'Your password is successfully changed. You can now try to log in with your new password'
+            )
+          );
+          history.push('/sign-in');
+        }
+      })
+      .catch(({ response }) => {
+        if (response === undefined) {
+          dispatch(failure('No connection with server'));
+          dispatch(alertActions.error('Connection error with server. Try again later.'));
+        } else {
+          dispatch(failure(response.data));
+          dispatch(alertActions.error(response.data));
+        }
+      });
+  };
+};
+
+const editEmail = email => ({
+  type: userActionTypes.EDIT_EMAIL,
+  email
+});
+
+const changeEmail = (id, email) => {
+  function request() {
+    return { type: userActionTypes.PERFORM_PASSWORD_RESET_REQUEST, id, email };
+  }
+  function success() {
+    return { type: userActionTypes.PERFORM_PASSWORD_RESET_SUCCESS };
+  }
+  function failure(error) {
+    return { type: userActionTypes.PERFORM_PASSWORD_RESET_FAILURE, error };
+  }
+
+  return async dispatch => {
+    dispatch(request());
+
+    await put(`/users/${id}`, { email })
+      .then(res => {
+        if (res.status === 200) {
+          dispatch(success());
+          dispatch(alertActions.success('Your email is successfully changed.'));
+        }
+      })
+      .catch(({ response }) => {
+        if (response === undefined) {
+          dispatch(failure('No connection with server'));
+          dispatch(alertActions.error('Connection error with server. Try again later.'));
+        } else {
+          dispatch(failure(response.data));
+          dispatch(alertActions.error(response.data));
+        }
+      });
+  };
+};
+
 // All possible user actions
 export const userActions = {
   signIn,
   signUp,
   signOut,
   signOutWithoutAlert,
-  fetchProfile
+  fetchProfile,
+  requestPasswordReset,
+  performPasswordReset,
+  editEmail,
+  changeEmail
 };

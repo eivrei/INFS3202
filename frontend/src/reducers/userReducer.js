@@ -15,6 +15,8 @@ export default (state = initialState, action) => {
       return { ...state, isFetching: true };
     case userActionTypes.FETCH_POFILE_SUCCESS:
       return { ...state, isFetching: false, ...action.user };
+    case userActionTypes.EDIT_EMAIL:
+      return { ...state, email: action.email };
     case userActionTypes.FETCH_POFILE_FAILURE:
     default:
       return state;

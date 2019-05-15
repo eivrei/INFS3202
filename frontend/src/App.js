@@ -12,6 +12,7 @@ import SignUpContainer from './containers/SignUpContainer';
 import EventDetailContainer from './containers/EventDetailContainer';
 import EventFormContainer from './containers/EventFormContainer';
 import VerifyEmailContainer from './containers/VerifyEmailContainer';
+import ForgotPasswordContainer from './containers/ForgotPasswordContainer';
 import NoMatch from './components/NoMatch';
 import PrivateRoute from './containers/PrivateRoute';
 import Profile from './components/Profile';
@@ -33,6 +34,7 @@ const App = ({ alert, clearAlert }) => (
           <Route path="/" exact component={Landingpage} />
           <Route path="/sign-in" component={SignInContainer} />
           <Route path="/sign-up" component={SignUpContainer} />
+          <Route path="/forgot-password" component={ForgotPasswordContainer} />
           <Route exact path="/events/new" component={EventFormContainer} />
           <Route exact path="/events/:id" component={EventDetailContainer} />
           <Route exact path="/verify-email" component={VerifyEmailContainer} />
