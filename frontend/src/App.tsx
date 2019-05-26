@@ -19,7 +19,7 @@ import Profile from './components/Profile';
 import PositionedSnackbar from './components/PositionedSnackbar';
 import { alertActions } from './actions/alertActions';
 
-const App = ({ alert, clearAlert }) => (
+const App: React.FC<{alert: {type: string; message: string; open: boolean}; clearAlert: () => void;}> = ({ alert, clearAlert }) => (
   <React.Fragment>
     <CssBaseline />
     <Router history={history}>
@@ -48,18 +48,18 @@ const App = ({ alert, clearAlert }) => (
 
 App.propTypes = {
   alert: PropTypes.shape({
-    open: PropTypes.bool,
-    type: PropTypes.string,
-    message: PropTypes.string
+    open: PropTypes.bool.isRequired,
+    type: PropTypes.string.isRequired,
+    message: PropTypes.string.isRequired
   }).isRequired,
   clearAlert: PropTypes.func.isRequired
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: any) => ({
   alert: state.alert
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch: any) => ({
   clearAlert: () => dispatch(alertActions.clear())
 });
 

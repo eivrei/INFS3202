@@ -18,11 +18,11 @@ export const eventActionTypes = {
   CREATE_EVENT_FAILURE: 'CREATE_EVENT_FAILURE'
 };
 
-const loadAllEvents = page => {
+const loadAllEvents = (page: string) => {
   function request() {
     return { type: eventActionTypes.FETCH_ALL_EVENTS_REQUEST };
   }
-  function success(data) {
+  function success(data: any) {
     return {
       type: eventActionTypes.FETCH_ALL_EVENTS_SUCCESS,
       events: data.results,
@@ -31,7 +31,7 @@ const loadAllEvents = page => {
       previousPage: data.previous === null ? null : data.previous.slice(-1)
     };
   }
-  function failure(error) {
+  function failure(error: string) {
     return { type: eventActionTypes.FETCH_ALL_EVENTS_FAILURE, error };
   }
 
